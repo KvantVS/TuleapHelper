@@ -1,0 +1,935 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.ServiceModel;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using System.Web.Services.Protocols;
+using System.Web.Services;
+using System.Net;
+using System.Web;
+using System.IO;
+using Newtonsoft.Json;
+
+using System.Configuration;
+using System.Collections.Specialized;
+using System.Runtime.InteropServices.ComTypes;
+
+namespace TuleapHelper
+{
+    public partial class Form1 : Form
+    {
+        public static UserInfo globalUserInfo = new UserInfo();// { user_id = "171", token = "207f8dd40f8732fd0623a4b567341400" } ;
+        public const string tuleapHost = "https://tuleap.nat.kz/api/";
+        public Project[] globalProjects;
+        public byte callCounter = 0;
+
+        public string sZipFileNameTemplate = "";
+        public static string sWorkingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
+        public static string sZipTempFolder = Path.Combine(sWorkingFolder, "zippatch");
+        public string sAttr = "";
+        public string sEsedoProjectFolder = @"C:\NAT_ESEDO\src\CopiedManually\git-esedo\ESEDO_Sources";
+        public string remotePatchFolder = @"\\buildkrg\GE-ESEDO\?????? ?? ????????????\1.1.0";
+
+        List<string> libsToPatch = new List<string>();
+        Dictionary<string, string> libsShortnames = new Dictionary<string, string>
+        {
+            {"JS.EDO.AccountingIntegration", "AI"},
+            {"JS.EDO.Administration", "ADM" },
+            {"JS.EDO.Assignments", "ASM" },
+            {"JS.EDO.Assignments.Interaction", "ASMInt" },
+            {"JS.EDO.Blanks", "BL" },
+            {"JS.EDO.CertifiedExpertOrganizations", "CEO" },
+            {"JS.EDO.CommonInfo", "CI" },
+            {"JS.EDO.Controls", "CON" },
+            {"JS.EDO.Dictionaries", "DIC" },
+            {"JS.EDO.DictionariesLogic", "DICLogic" },
+            {"JS.EDO.DictionariesSync", "DICSync" },
+            {"JS.EDO.DigitalSignature", "DS" },
+            {"JS.EDO.Equipments", "EQU" },
+            {"JS.EDO.Host", "HOST" },
+            {"JS.EDO.ImportExcelData", "IED" },
+            {"JS.EDO.Indicators", "IND" },
+            {"JS.EDO.Interaction", "INT" },
+            {"JS.EDO.Interaction.AccreditedOrgs", "IntAO" },
+            {"JS.EDO.InvolvementExperts", "InvExp" },
+            {"JS.EDO.Jobs", "JOB" },
+            {"JS.EDO.Notification", "NOT" },
+            {"JS.EDO.Planning", "PLAN" },
+            {"JS.EDO.Reports", "REPS" },
+            {"JS.EDO.Search", "SRCH" },
+            {"JS.EDO.SearchMaterialsPlugin", "SMP" },
+            {"JS.EDO.SearchMaterialWordAddinWeb", "SMWAW" },
+            {"JS.EDO.Service", "SVC" },
+            {"JS.EDO.Templates", "TMPL" },
+            {"JS.EDO.WordEditor", "WE" },
+            {"TestProjects", "TEST" }
+        };
+
+
+        /// <summary>
+        /// ???? - id ???????, ???????? - ?????? ??????????? ????? (???? ?? ?????, ??? ??? id) ?????? ????? id
+        /// </summary>
+        public Dictionary<int, List<int>> dictRequiredTasksFields = new Dictionary<int, List<int>>
+        {
+            { 548, new List<int> {1,2,3,4 } }, // 181, 2016
+            { 557, new List<int> {1,2,3,4 } }  // 182, 2015
+        };
+        //540 - ???? 2016
+
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        //public TuleapService.Session session;
+        //public TuleapService.CodendiAPIPortTypeClient tc = new TuleapService.CodendiAPIPortTypeClient();
+        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //TuleapService.CodendiAPIPortTypeClient tc = new TuleapService.CodendiAPIPortTypeClient();
+
+            //session = tc.login("vadim.sidorchuk", "1qwer0Nat");
+            ////session = tc.login("kvantvs", "andr0medaT");
+            //textBox1.Text += string.Format("user_id: {0}\r\nsession_hash: {1}\r\n", session.user_id.ToString(), session.session_hash.ToString());
+            //textBox1.Text += string.Format("API version: {0}\r\n", tc.getAPIVersion());
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // --- ???????? ????????
+            textBox1.Text += "????????? ?????????\r\n";
+
+            try
+            {
+                globalUserInfo.user_id = ConfigurationManager.AppSettings.Get("user_id");
+                globalUserInfo.token = ConfigurationManager.AppSettings.Get("authToken");
+            }
+            catch (Exception ex)
+            {
+                textBox1.Text += "??????: " + ex.ToString() + "\r\n";
+            }
+            
+            InitiateWorkWithTuleap();
+
+            string[] libFolders = Directory.GetDirectories(sEsedoProjectFolder);
+            var i = 0;
+            foreach(Control c in panel1.Controls)
+            {
+                if (c is CheckBox)
+                {
+                    (c as CheckBox).Text = libFolders[i].Substring(sEsedoProjectFolder.Length + 1);
+                    i++;
+                    if (i >= libFolders.Count())
+                        break;
+                }
+            }
+
+            //if (!Directory.Exists(sWorkingFolder))
+            //    Directory.CreateDirectory(sWorkingFolder);
+
+            if (!Directory.Exists(sZipTempFolder))
+                Directory.CreateDirectory(sZipTempFolder);
+            
+
+            //System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (
+            //    object s,
+            //    System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+            //    System.Security.Cryptography.X509Certificates.X509Chain chain,
+            //    System.Net.Security.SslPolicyErrors sslPolicyErrors)
+            //{ return true; };
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //var groups = tc.getMyProjects(session.session_hash);
+
+            //textBox1.Text += "\r\n--- groups ---\r\n";
+            //foreach (var g in groups)
+            //{
+            //    textBox1.Text += "description: " + g.description + "\r\n";
+            //    textBox1.Text += "group_id: " + g.group_id + "\r\n";
+            //    textBox1.Text += "group_name: " + g.group_name + "\r\n";
+            //    textBox1.Text += "unix_group_name: " + g.unix_group_name + "\r\n";
+
+            //    ListViewItem li = new ListViewItem();
+            //    li.Tag = g.group_id;
+            //    li.Text = g.group_name;
+            //    //listView1.Items.Add(g.group_id.ToString(), g.group_name, 0);
+            //    listView1.Items.Add(li);
+            //}
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //BasicHttpBinding myBinding = new BasicHttpBinding();
+            ////Binding
+            //myBinding.MessageEncoding = WSMessageEncoding.Mtom;
+            //myBinding.TextEncoding = Encoding.GetEncoding("ISO-8859-1");
+
+            //EndpointAddress epa = new EndpointAddress("http://tuleap.nat.kz/plugins/tracker/soap/?wsdl");
+
+            //var tc2 = new TuleapService.CodendiAPIPortTypeClient(myBinding, epa);
+            //var trackers = tc2.getTrackerList(session.session_hash, Convert.ToInt32(tbTracker.Text));
+
+            ////tuleapWEB.asd;
+
+            //textBox1.Text += "\r\n--- trackers ---\r\n";
+            //foreach (var t in trackers)
+            //{
+            //    textBox1.Text += string.Format("description: {0}\r\n", t.description);
+            //    textBox1.Text += string.Format("item_name: {0}\r\n", t.item_name);
+            //    textBox1.Text += string.Format("name: {0}\r\n", t.name);
+            //    textBox1.Text += string.Format("open_count: {0}\r\n", t.open_count);
+            //    textBox1.Text += string.Format("total_count: {0}\r\n", t.total_count);
+            //    textBox1.Text += string.Format("reports_desc: {0}\r\n", t.reports_desc);
+            //}
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //var trackers = tc.getTrackerList(session.session_hash, Convert.ToInt32(tbTracker.Text));
+
+            //textBox1.Text += "\r\n--- trackers ---\r\n";
+            //foreach (var t in trackers)
+            //{
+            //    textBox1.Text += string.Format("description: {0}\r\n", t.description);
+            //    textBox1.Text += string.Format("item_name: {0}\r\n", t.item_name);
+            //    textBox1.Text += string.Format("name: {0}\r\n", t.name);
+            //    textBox1.Text += string.Format("open_count: {0}\r\n", t.open_count);
+            //    textBox1.Text += string.Format("total_count: {0}\r\n", t.total_count);
+            //    textBox1.Text += string.Format("reports_desc: {0}\r\n", t.reports_desc);
+            //}
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //var packages = tc.getPackages(session.session_hash, (int)listView1.SelectedItems[0].Tag);
+
+            //textBox1.Text += "\r\n--- packages ---\r\n";
+            //foreach (var p in packages)
+            //{
+            //    textBox1.Text += string.Format("approve_license: {0}\r\n", p.approve_license);
+            //    textBox1.Text += string.Format("package_id: {0}\r\n", p.package_id);
+            //    textBox1.Text += string.Format("name: {0}\r\n", p.name);
+            //    textBox1.Text += string.Format("rank: {0}\r\n", p.rank);
+            //    textBox1.Text += string.Format("status_id: {0}\r\n", p.status_id);
+            //}
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ////int groupid = (int)listView1.SelectedItems[0].Tag;
+            //int groupid = Convert.ToInt32(tbTracker.Text);
+
+            //var artifactTypes = tc.getArtifactTypes(session.session_hash, groupid);
+
+            //textBox1.Text += "\r\n--- ArtifactTypes ---\r\n";
+            //foreach(var at in artifactTypes)
+            //{
+            //    textBox1.Text += string.Format("description: {0}\r\n", at.description);
+            //    textBox1.Text += string.Format("field_dependencies: {0}\r\n", at.field_dependencies);
+            //    textBox1.Text += string.Format("field_sets: {0}\r\n", at.field_sets);
+            //    textBox1.Text += string.Format("group_artifact_id: {0}\r\n", at.group_artifact_id);
+            //    textBox1.Text += string.Format("group_id: {0}\r\n", at.group_id);
+            //    textBox1.Text += string.Format("item_name: {0}\r\n", at.item_name);
+            //    textBox1.Text += string.Format("name: {0}\r\n", at.name);
+            //    textBox1.Text += string.Format("open_count: {0}\r\n", at.open_count);
+            //    textBox1.Text += string.Format("total_count: {0}\r\n", at.total_count);
+            //    textBox1.Text += string.Format("total_file_size: {0}\r\n", at.total_file_size);
+                
+            //}
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            //tc.getArtifacts(session.session_hash, (int)listView1.SelectedItems[0].Tag, Convert.ToInt32(tbTracker.Text), null, 0, 0);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            //var g = tc.getGroupById(session.session_hash, Convert.ToInt32(tbTracker.Text));
+
+            //textBox1.Text += "??????: " + g.group_name;
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////
+        string HttpGet(string url, bool useToken)
+        {
+            HttpWebRequest req = WebRequest.Create(tuleapHost + url) as HttpWebRequest;
+            if (useToken)
+            {
+                req.Headers.Add("X-Auth-Token: " + globalUserInfo.token);
+                req.Headers.Add("X-Auth-UserId: " + globalUserInfo.user_id);
+            }
+            string result = null;
+            try {
+                using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+                {
+                    StreamReader reader = new StreamReader(resp.GetResponseStream());
+                    result = reader.ReadToEnd();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is WebException)
+                {
+                    if (((ex as WebException).Response as HttpWebResponse).StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        callCounter++;
+                        if (callCounter == 10)
+                        {
+                            callCounter = 0;
+                            return null;
+                        }
+                        Authorize();
+                        result = HttpGet(url, useToken);
+                    }
+                    string s = string.Format($"{((ex as WebException).Response as HttpWebResponse).StatusCode}\r\n{ex.Data}\r\n{ex.TargetSite}\r\n{ex.HResult}\r\n{ex.Message}\r\n{ex.Source}\r\n{ex.StackTrace}\r\n{ex.InnerException}");
+                    textBox1.Text += s;
+                }
+            }
+            callCounter = 0;
+            return result;
+
+        }
+
+        static string HttpGetJSON(string url, string json, bool useToken)
+        {
+            string query = "query=" + System.Web.HttpUtility.UrlEncode(json);
+            string resultUrl = tuleapHost + url + "?" + query;
+            //resultUrl = System.Web.HttpUtility.UrlEncode(query);
+            HttpWebRequest req = WebRequest.Create(resultUrl) as HttpWebRequest;
+            if (useToken)
+            {
+                req.Headers.Add("X-Auth-Token: " + globalUserInfo.token);
+                req.Headers.Add("X-Auth-UserId: " + globalUserInfo.user_id);
+            }
+            string result = null;
+            using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+            {
+                StreamReader reader = new StreamReader(resp.GetResponseStream());
+                result = reader.ReadToEnd();
+            }
+            return result;
+        }
+
+        static string HttpPost(string url, string[] paramName, string[] paramVal, bool useToken)
+        {
+            HttpWebRequest req = WebRequest.Create(new Uri(tuleapHost + url)) as HttpWebRequest;
+            req.Method = "POST";
+            req.ContentType = "application/x-www-form-urlencoded";
+            if (useToken)
+            {
+                req.Headers.Add("X-Auth-Token: " + globalUserInfo.token);
+                req.Headers.Add("X-Auth-UserId: " + globalUserInfo.user_id);
+            }
+            
+            StringBuilder paramz = new StringBuilder();
+            for (int i = 0; i < paramName.Length; i++)
+            {
+                paramz.Append(paramName[i]);
+                paramz.Append("=");
+                paramz.Append(System.Uri.EscapeUriString(paramVal[i]));
+                paramz.Append("&");
+            }
+
+            // Encode the parameters as form data:
+            byte[] formData = UTF8Encoding.UTF8.GetBytes(paramz.ToString());
+            req.ContentLength = formData.Length;
+
+            // Send the request:
+            using (Stream post = req.GetRequestStream())
+            {
+                post.Write(formData, 0, formData.Length);
+            }
+
+            // Pick up the response:
+            string result = null;
+            using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+            {
+                StreamReader reader = new StreamReader(resp.GetResponseStream());
+                result = reader.ReadToEnd();
+            }
+
+            return result;
+        }
+
+
+        static string HttpPostJSON(string url, string json, bool useToken)
+        {
+            HttpWebRequest req = WebRequest.Create(new Uri(tuleapHost + url)) as HttpWebRequest;
+            req.Method = "POST";
+            req.ContentType = "application/json";  //req.ContentType = "application/x-www-form-urlencoded";
+
+            if (useToken)
+            {
+                req.Headers.Add("X-Auth-Token: " + globalUserInfo.token);
+                req.Headers.Add("X-Auth-UserId: " + globalUserInfo.user_id);
+            }
+            
+            using (StreamWriter sw = new StreamWriter(req.GetRequestStream()))
+            {
+                sw.Write(json);
+            }
+       
+            // Pick up the response:
+            string result = null;
+            using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+            {
+                StreamReader reader = new StreamReader(resp.GetResponseStream());
+                result = reader.ReadToEnd();
+            }
+
+            return result;
+        }
+
+
+        public string JsonCreate(Dictionary<string, object> jsonNodes)
+        {
+            //todo: ???????? ?? ?????? dictionary;
+            //string json = "{'tracker': {'id':'557'}, 'values': [{'field_id':22456,'value':'asfasdf'}, {} ]}";
+            StringBuilder sb = new StringBuilder();
+            using (StringWriter sw = new StringWriter(sb))
+            using (JsonTextWriter jw = new JsonTextWriter(sw))
+            {
+                jw.WriteStartObject();
+                foreach (var j in jsonNodes)
+                {
+                    jw.WritePropertyName(j.Key, true);
+                    if (!(j.Value is string) && !(j.Value is int))
+                    {
+                        if (j.Value is Array)
+                        { }
+
+                        //else if (j.Value is IEnumerable)
+                        //{ }
+                        
+                        else //if (j.Value.GetType() == typeof(KeyValuePair<,>))
+                        {
+                            Type valueType = j.Value.GetType();
+                            if (valueType.IsGenericType)
+                            {
+                                var baseType = valueType.GetGenericTypeDefinition();
+
+                                if (baseType == typeof (KeyValuePair<,>))
+                                {
+                                    jw.WriteStartObject();
+
+                                    //Type t1 = j.Value.GetType().GetProperty("Key").PropertyType;
+                                    //Type t2 = j.Value.GetType().GetProperty("Value").PropertyType;
+                                    Type t1 = j.Value.GetType().GenericTypeArguments[0];
+                                    Type t2 = j.Value.GetType().GenericTypeArguments[1];
+                                    var kvpPropertyType = typeof(KeyValuePair<,>);
+                                    var myKvpPropertyType = kvpPropertyType.MakeGenericType(t1, t2);
+                                    dynamic v1 = myKvpPropertyType.GetProperty("Key").GetValue(j.Value, null);
+                                    dynamic v2 = myKvpPropertyType.GetProperty("Value").GetValue(j.Value, null);
+
+                                    jw.WritePropertyName(v1, true);
+                                    jw.WriteValue(v2);
+
+                                    jw.WriteEndObject();
+                                }
+                                else if (baseType == typeof (List<>))
+                                {
+                                    
+                                }
+                            }
+                        }
+                    }
+                    else
+                        jw.WriteValue(j.Value);
+                }
+                jw.WriteEndObject();
+            }
+            return sb.ToString();            
+        }
+
+
+        public void WriteJsonParamValue(object jval)
+        {
+            
+        }
+
+
+        public void TranscodeJson(object json)
+        {
+            textBox1.Text += "\r\nJSON object:\r\n" + json.ToString() + "\r\n----------------------\r\n";
+        }
+
+
+        public void Authorize()
+        {
+            string username = "vadim.sidorchuk";
+            string password = "1qwer0Nat";
+
+            Dictionary<string, object> jsonNodes = new Dictionary<string, object>();
+            jsonNodes.Add("username", username);
+            jsonNodes.Add("password", password);
+
+            string json = JsonCreate(jsonNodes);
+
+            var response = HttpPostJSON("tokens", json, false);
+            textBox1.Text += "Trying to authenticate with JSON query:\r\n" + response.ToString() + "\r\n";
+            globalUserInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<UserInfo>(response);
+
+
+            // TODO: ??????? ?????????? ?????? ? ????, ??? ??????
+            Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            cfg.AppSettings.Settings.Add("user_id", globalUserInfo.user_id);
+            cfg.AppSettings.Settings.Add("authToken", globalUserInfo.token);
+            cfg.Save();
+        }
+
+
+        public bool InitiateWorkWithTuleap()
+        {
+            //todo ???????????? ???????? ??????????
+            
+            // --- 1. ??????? ??????? ? ??????? ????????
+            var j = "";
+            
+            j = HttpGet("projects", true);
+            
+            if (j == null)
+                return false;
+            
+            globalProjects = JsonConvert.DeserializeObject<Project[]>(j);
+
+            foreach (Project p in globalProjects)
+            {
+                textBox1.Text +=
+                    $"??????? ????? ??????: id={p.id}, label={p.label}, shortname={p.shortname}\r\n???????? ??????? ???????\r\n";
+                
+                // --- ???????? ??????? ???????
+                j = HttpGet("projects/" + p.id.ToString() + "/trackers", true);
+                List<Tracker3> trackers = JsonConvert.DeserializeObject<List<Tracker3>>(j);
+                p.trackers = trackers;
+
+                foreach (Tracker3 t in trackers)
+                {
+                    textBox1.Text += string.Format("\t???????? ??????: id={0}, {1}, label={2}, item_name={3}\r\n", t.id, t.description, t.label, t.item_name);
+                }
+                textBox1.Text += "\r\n";
+            }
+
+            return true;
+        }
+
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            var s = HttpGet("projects", true);
+            textBox1.Text += "\r\nJSON response:\r\n" + s + "\r\n";
+
+            TranscodeJson(Newtonsoft.Json.JsonConvert.DeserializeObject(s));
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            var s = HttpGet("artifacts/" + tbArtifact.Text, true);  // + "?values_format=collection"
+            textBox1.Text += s;
+
+            TranscodeJson(JsonConvert.DeserializeObject(s));
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            // --- ??????????? ????. ID ???????? ??? ??????? ???????? (181 ? 182), ???? ??? - ????????. ? ??????? ???? ?????? ????? (540 ? 549 ?????.)
+
+            // --- ?????? 181 ---
+            // ??????:
+            // 22124 - ???? ?????????. ????????: ???????? ????? ??? ?????? ?????????? ??????
+            // 22120 - ???? "?????????". ????????: 16032 - ??????? ? ??????, 16033 - ?????????
+            // 22121 - ???? "??????? ??????". ????????: 16039 - "????????????????", 16040 - "?????????\???????????"
+            string jsonq = "{\"22124\":" + globalUserInfo.user_id + ",\"22120\":{\"operator\":\"contains\",\"value\":[\"16032\",\"16033\"]},\"22121\":{\"operator\":\"contains\",\"value\":[\"16039\",\"16040\"]}}";
+            
+            // 540 - ???? ??????? "Bugs" ??? ??????? EISKVE-R-2016
+            var j = HttpGetJSON("trackers/540/artifacts", jsonq, true);
+
+            Artifact[] artifacts = JsonConvert.DeserializeObject<Artifact[]>(j);
+
+            foreach(var a in artifacts)
+            {
+                var artquery = HttpGet(a.uri, true);
+                Artifact art = JsonConvert.DeserializeObject<Artifact>(artquery);
+
+                ListViewItem li = new ListViewItem(a.id.ToString() + " - " + art.values.Where(v => v.field_id == 22108).FirstOrDefault().value.ToString());
+                li.Tag = art;
+                listView1.Items.Add(li);
+            }
+
+            // --- ?????? 182 ---
+            j = "";
+            jsonq = "{\"22527\":" + globalUserInfo.user_id + ",\"22523\":{\"operator\":\"contains\",\"value\":[\"16334\",\"16335\"]},\"22524\":{\"operator\":\"contains\",\"value\":[\"16341\",\"16342\"]}}";
+
+            j = HttpGetJSON("trackers/549/artifacts", jsonq, true);
+            //textBox1.Text += j.ToString();
+
+            Artifact[] artifacts182 = JsonConvert.DeserializeObject<Artifact[]>(j);
+
+            foreach (var a in artifacts182)
+            {
+                var artquery = HttpGet(a.uri, true);
+                //textBox1.Text += artquery;
+                
+                Artifact art = JsonConvert.DeserializeObject<Artifact>(artquery);
+                ListViewItem li = new ListViewItem(a.id.ToString() + " - " + art.values.Where(v => v.field_id == 22511).FirstOrDefault().value.ToString());
+                li.Tag = art;
+                listView1.Items.Add(li);
+            }
+
+        }
+
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Authorize();
+        }
+
+        private void MenuBeginWorkOnBug_Click(object sender, EventArgs e)
+        {
+            // ???????? ?????? ??? ?????:
+            // 1. ????? ?????? ???? ??????? ??????????????? ?????? ????? ? ?????? ??????
+            // 2. ??????? ??????
+            // 3. ???????? ??? (??????)
+
+            // --- 1. ??????? id ?????? ??? ???????? (????? ? ???????)
+            int projId = (listView1.SelectedItems[0].Tag as Artifact).project.id;
+
+            Project p = globalProjects.Where(pr => pr.id == projId).SingleOrDefault();
+            int patchTrackerId = p.trackers.Where(t => t.label == "Patches").SingleOrDefault().id;
+            int tasksTrackerId = p.trackers.Where(t => t.label == "Tasks").SingleOrDefault().id;
+            textBox1.Text += string.Format("patchTrackerId={0}, tasksTrackerId={1}", patchTrackerId, tasksTrackerId);
+
+            // --- 2. ??????? ?????? ??? ????
+            //string json = "{'tracker': {'id':'557'}, 'values': [{'field_id':22456,'value':'asfasdf'}, {} ]}";
+            List<object> fieldValues = new List<object>();
+            fieldValues.Add(new Dictionary<string, string>{ { "field_id", "22456"}, { "value","asfadhfjk"} });
+            fieldValues.Add(new Dictionary<string, string> { { "field_id", "22457" }, { "value", "12345" } });
+            fieldValues.Add(new Dictionary<string, string> { { "field_id", "22458" }, { "value", "_+--_" } });
+
+            var json = new Dictionary<string, object>
+            {
+                {"tracker", new KeyValuePair<string, int>("id", tasksTrackerId) },
+                {"values", fieldValues }
+            };
+
+            textBox1.Text += "\r\n\r\n" + JsonCreate(json);
+
+
+            //var json = new Dictionary<string, object>
+            //{
+            //    {"tracker", new KeyValuePair<string, int>("id", tasksTrackerId) },
+            //    {"values", new List<KeyValuePair<string, string>>
+            //        {
+            //            new KeyValuePair<string, string>("field_id", "22456"),
+
+            //        }
+            //    }
+            //}
+
+            //HttpPostJSON("artifacts", json, true);
+
+            //textBox2.Text = (string)((Artifact)listView1.SelectedItems[0].Tag).values.Where(v => v.label == "????????? ????????").FirstOrDefault().value;
+            //int trackerId = 0;
+
+            // --- 3. ???????? ???
+
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count!=0)
+                textBox3.Text = (string)((Artifact)listView1.SelectedItems[0].Tag).values.Where(v => v.label == "????????? ????????").FirstOrDefault().value;
+        }
+
+        private void btn_InitializeWork_Click(object sender, EventArgs e)
+        {
+            InitiateWorkWithTuleap();
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            int id = Convert.ToInt32(tbTracker.Text);
+            var j = HttpGet("trackers/" + tbTracker.Text, true);
+            TranscodeJson(j);
+        }
+
+        private void MenuCreatePatchT1_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = true;
+            //var bugId = (listView1.SelectedItems[0].Tag as Artifact).id;
+            //var projectId = (listView1.SelectedItems[0].Tag as Artifact).project.id;
+
+            // 1
+            // todo: CreateArtifact("tasks", bugId, projectId)
+
+            // 2. ???????? ? ??????
+            Directory.SetCurrentDirectory(sWorkingFolder);
+
+            //string slibs = string.Join("_", libsShortnames.Values);
+
+            // 2.1 ???????? ???? ? ????
+            foreach (var libName in libsToPatch)
+            {
+                var srcFolder = Path.Combine(sEsedoProjectFolder, libName, "obj", "Debug");
+                var destFolder = Path.Combine(sZipTempFolder, "App", "bin");
+
+                if (!Directory.Exists(destFolder))
+                    Directory.CreateDirectory(destFolder);
+                if (!Directory.Exists(srcFolder))
+                { }
+
+                var fileDLL = libName + ".dll";
+                var filePDB = libName + ".pdb";
+                if (File.Exists(Path.Combine(srcFolder, fileDLL)))
+                {
+                    File.Copy(Path.Combine(srcFolder, fileDLL), Path.Combine(destFolder, fileDLL), true); // 'System.IO.FileNotFoundException' 
+                    File.Copy(Path.Combine(srcFolder, filePDB), Path.Combine(destFolder, filePDB), true);
+                }
+                else
+                {
+                    // todo: ?????? ?????????? ?? ???????? ????? (???? ??? ???)
+                }
+            }
+
+            // --- 2.2 ??????? zip-????
+            var version = "1.12.4";
+            var sdate = DateTime.Now.Date.ToString("yyyy.MM.dd");
+            var username = "Vadim.Sidorchuk";
+            var patchNumber = 1;
+            string slibs = string.Join("_", (libsShortnames.Where(kvp => libsToPatch.Contains(kvp.Key)).Select(kvp => kvp.Value)));
+            //List<string> libs = new List<string>();
+            //libs.Add("ASM");
+            //libs.Add("SqlFunctions");
+            //libs.Add("CommonInfo");
+            //string slibs = string.Join("_", libs);
+
+            sZipFileNameTemplate = $"DONTUSE_update_{version}_{sdate}_{patchNumber} of {username} ({slibs}).zip";  //update_1.12.4_2016.10.05_1 of Vadim.Sidorchuk (ASM_SqlFunctions_CommonInfo).zip
+            System.IO.Compression.ZipFile.CreateFromDirectory(sZipTempFolder, sZipFileNameTemplate);
+
+            // --- 2.3 ???????? zip ? BuildKRG + ? ?????????? ????? ?? ?????
+            if (File.Exists(sZipFileNameTemplate))
+                File.Copy(sZipFileNameTemplate, Path.Combine(remotePatchFolder, sZipFileNameTemplate));
+
+            // --- 2.4 SQL
+            // --- 2.5 ???????
+
+
+        }
+
+        /// <summary>
+        /// ??????? ????????
+        /// </summary>
+        /// <param name="typeOfArtifact">??? ???????????? ?????????</param>
+        /// <param name="bugId"></param>
+        /// <param name="projectId"></param>
+        public void CreateArtifact(string typeOfArtifact, int bugId, int projectId)
+        {
+            if (typeOfArtifact=="tasks")
+            {
+                // todo: ???????? ?????????
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            textBox1.Text += sZipTempFolder;
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            //ConfigurationManager.AppSettings.Set("key0", "asdf");
+            Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            cfg.AppSettings.Settings.Add("key0", "qwer");
+            cfg.Save();
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            sAttr = ConfigurationManager.AppSettings.Get("key0");
+            textBox1.Text += sAttr;
+
+            //Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            ConfigurationManager.AppSettings.Get("key0");
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            libsToPatch.Clear();
+
+            foreach (Control c in panel1.Controls)
+            {
+                if (c is CheckBox && (c as CheckBox).Checked)
+                {
+                    var s = (c as CheckBox).Text;
+                    libsToPatch.Add(s);
+
+                    //var s2 = libsShortnames[s];
+                    //libsToPatch.Add(s2);
+                }
+
+            }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+
+
+    public class UserInfo
+    {
+        public string user_id;
+        public string token;
+        public string uri;
+    }
+
+    public class Resource
+    {
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class Project
+    {
+        public int id { get; set; }
+        public string uri { get; set; }
+        public string label { get; set; }
+        public string shortname { get; set; }
+        public List<Resource> resources { get; set; }
+        public List<object> additional_informations { get; set; }
+        public List<Tracker3> trackers { get; set; }
+        public List<string> requiredFields { get; set; }
+    }
+
+
+    public class Tracker
+    {
+        public int id { get; set; }
+        public string uri { get; set; }
+    }
+
+    //public class Artifact
+    //{
+    //    public int id { get; set; }
+    //    public string uri { get; set; }
+    //    public Tracker tracker { get; set; }
+    //    public Project project { get; set; }
+    //    public int submitted_by { get; set; }
+    //    public string submitted_on { get; set; }
+    //    public string html_url { get; set; }
+    //    public string changesets_uri { get; set; }
+    //    public object values { get; set; }
+    //    public object values_by_field { get; set; }
+    //    public string last_modified_date { get; set; }
+    //}
+    public class Artifact
+    {
+        public int id { get; set; }
+        public string uri { get; set; }
+        public Tracker tracker { get; set; }
+        public Project project { get; set; }
+        public int submitted_by { get; set; }
+        public string submitted_on { get; set; }
+        public string html_url { get; set; }
+        public string changesets_uri { get; set; }
+        public List<Value> values { get; set; }
+        public object values_by_field { get; set; }
+        public string last_modified_date { get; set; }
+    }
+
+    public class Color
+    {
+        public int r { get; set; }
+        public int g { get; set; }
+        public int b { get; set; }
+    }
+
+    public class User
+    {
+        public string email { get; set; }
+        public string status { get; set; }
+        public object id { get; set; }
+        public string uri { get; set; }
+        public string user_url { get; set; }
+        public string real_name { get; set; }
+        public string display_name { get; set; }
+        public string username { get; set; }
+        public string ldap_id { get; set; }
+        public string avatar_url { get; set; }
+        public bool is_anonymous { get; set; }
+        public string label { get; set; }
+        public Color color { get; set; }
+    }
+
+    public class Tracker2
+    {
+        public int id { get; set; }
+        public string uri { get; set; }
+        public string label { get; set; }
+    }
+
+    public class Tracker3
+    {
+        public int id { get; set; }
+        public string label { get; set; }
+        public string description { get; set; }
+        public string item_name { get; set; }
+    }
+
+
+    public class ReverseLink
+    {
+        public int id { get; set; }
+        public string uri { get; set; }
+        public Tracker2 tracker { get; set; }
+    }
+
+    public class FileDescription
+    {
+        public int id { get; set; }
+        public int submitted_by { get; set; }
+        public string description { get; set; }
+        public string name { get; set; }
+        public int size { get; set; }
+        public string type { get; set; }
+        public string html_url { get; set; }
+        public string html_preview_url { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class Value
+    {
+        public int field_id { get; set; }
+        public string type { get; set; }
+        public string label { get; set; }
+        public object value { get; set; }
+        public List<User> values { get; set; }
+        public List<int?> bind_value_ids { get; set; }
+        public List<object> links { get; set; }
+        public List<ReverseLink> reverse_links { get; set; }
+        public List<object> granted_groups { get; set; }
+        public List<object> granted_groups_details { get; set; }
+        public List<FileDescription> file_descriptions { get; set; }
+        public string format { get; set; }
+    }
+
+
+}

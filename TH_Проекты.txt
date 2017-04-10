@@ -1,0 +1,56 @@
+27.01.2017 16:58:03	Загружаем настройки...
+27.01.2017 16:58:03	OK
+27.01.2017 16:58:07	Ответ: Created. Авторизован пользователь Vadim.Sidorchuk. user_id: 171, token: 73df5d2d38eef55fcaea0f55e403fddb
+27.01.2017 16:58:31	Загружен новый проект: id: 181, label: EISKVE-2016-R, shortname: esedo-2016-r
+27.01.2017 16:58:32	Загружен трекер: id: 540, description: Ошибки/Проблемы v.4, label: Bugs, item_name: Bugs
+27.01.2017 16:58:32	Загружен трекер: id: 541, description: Запросы на изменения v.4, label: ChangeRequest, item_name: ChangeRequest
+27.01.2017 16:58:32	Загружен трекер: id: 542, description: Эпики v.3, label: Epics, item_name: Epics
+27.01.2017 16:58:32	Загружен трекер: id: 543, description: Фичи (функциональность) v.4, label: Features, item_name: Features
+27.01.2017 16:58:32	Загружен трекер: id: 665, description: Совещания, label: Meetings, item_name: Meetings
+27.01.2017 16:58:32	Загружен трекер: id: 544, description: Патчи v.5, label: Patches, item_name: Patches
+27.01.2017 16:58:32	Загружен трекер: id: 545, description: Релизы v.2, label: Releases, item_name: Releases
+27.01.2017 16:58:32	Загружен трекер: id: 546, description: Требования v.3, label: Requirements, item_name: Requirements
+27.01.2017 16:58:32	Загружен трекер: id: 547, description: Риски v.2, label: Risks, item_name: Risks
+27.01.2017 16:58:32	Загружен новый проект: id: 182, label: ESEDO-2015-GP, shortname: esedo-2015-gp
+27.01.2017 16:58:33	Загружен трекер: id: 549, description: Ошибки/Проблемы v.4, label: Bugs, item_name: Bugs
+27.01.2017 16:58:33	Загружен трекер: id: 550, description: Запросы на изменения v.3, label: ChangeRequest, item_name: ChangeRequest
+27.01.2017 16:58:33	Загружен трекер: id: 551, description: Эпики v.2, label: Epics, item_name: Epics
+27.01.2017 16:58:33	Загружен трекер: id: 552, description: Фичи (функциональность) v.3, label: Features, item_name: Features
+27.01.2017 16:58:33	Загружен трекер: id: 553, description: Патчи v.4, label: Patches, item_name: Patches
+27.01.2017 16:58:33	Загружен трекер: id: 554, description: Релизы v.2, label: Releases, item_name: Releases
+27.01.2017 16:58:33	Загружен трекер: id: 555, description: Требования v.3, label: Requirements, item_name: Requirements
+27.01.2017 16:58:33	Загружен трекер: id: 556, description: Риски v.2, label: Risks, item_name: Risks
+27.01.2017 16:58:33	Загружен трекер: id: 557, description: Задачи (поддержка KANBAN) v.5, label: Tasks, item_name: Tasks
+27.01.2017 16:58:33	Загружен новый проект: id: 244, label: EISKVE-2017-R-1, shortname: eiskve-2017-r-1
+27.01.2017 16:58:34	Загружен трекер: id: 1161, description: Ошибки/Проблемы v.5, label: Bugs, item_name: Bugs
+27.01.2017 16:58:34	Загружен трекер: id: 1162, description: ChangeRequest v.4, label: ChangeRequest, item_name: ChangeRequest
+27.01.2017 16:58:34	Загружен трекер: id: 1163, description: Эпики v.3, label: Epics, item_name: Epics
+27.01.2017 16:58:34	Загружен трекер: id: 1164, description: Функциональность, документы (v.4), label: Features, item_name: Features
+27.01.2017 16:58:34	Загружен трекер: id: 1166, description: Совещания, label: Meetings, item_name: Meetings
+27.01.2017 16:58:34	Загружен трекер: id: 1167, description: Patches (v.6), label: Patches, item_name: Patches
+27.01.2017 16:58:34	Загружен трекер: id: 1168, description: Релизы v.2, label: Releases, item_name: Releases
+27.01.2017 16:58:34	Загружен трекер: id: 1169, description: Требования v.3, label: Requirements, item_name: Requirements
+27.01.2017 16:58:34	Загружен трекер: id: 1170, description: Риски v.2, label: Risks, item_name: Risks
+27.01.2017 16:58:34	Загружен трекер: id: 1171, description: Задачи (поддержка KANBAN) v.5, label: Tasks, item_name: Tasks
+27.01.2017 16:58:34	Загружен новый проект: id: 245, label: EISKVE-2017-R-2, shortname: eiskve-2017-r-2
+27.01.2017 16:58:35	Загружен трекер: id: 1172, description: Ошибки/Проблемы v.5, label: Bugs, item_name: Bugs
+27.01.2017 16:58:35	Загружен трекер: id: 1173, description: ChangeRequest v.4, label: ChangeRequest, item_name: ChangeRequest
+27.01.2017 16:58:35	Загружен трекер: id: 1174, description: Эпики v.3, label: Epics, item_name: Epics
+27.01.2017 16:58:35	Загружен трекер: id: 1175, description: Функциональность, документы (v.4), label: Features, item_name: Features
+27.01.2017 16:58:35	Загружен трекер: id: 1177, description: Совещания, label: Meetings, item_name: Meetings
+27.01.2017 16:58:35	Загружен трекер: id: 1178, description: Patches (v.6), label: Patches, item_name: Patches
+27.01.2017 16:58:35	Загружен трекер: id: 1179, description: Релизы v.2, label: Releases, item_name: Releases
+27.01.2017 16:58:35	Загружен трекер: id: 1180, description: Требования v.3, label: Requirements, item_name: Requirements
+27.01.2017 16:58:35	Загружен трекер: id: 1181, description: Риски v.2, label: Risks, item_name: Risks
+27.01.2017 16:58:35	Загружен трекер: id: 1182, description: Задачи (поддержка KANBAN) v.5, label: Tasks, item_name: Tasks
+27.01.2017 16:58:35	Загружен новый проект: id: 246, label: EISKVE-2016-GP, shortname: eiskve-2016-gp
+27.01.2017 16:58:35	Загружен трекер: id: 1183, description: Ошибки/Проблемы v.5, label: Bugs, item_name: Bugs
+27.01.2017 16:58:35	Загружен трекер: id: 1184, description: ChangeRequest v.4, label: ChangeRequest, item_name: ChangeRequest
+27.01.2017 16:58:35	Загружен трекер: id: 1185, description: Эпики v.3, label: Epics, item_name: Epics
+27.01.2017 16:58:35	Загружен трекер: id: 1186, description: Функциональность, документы (v.4), label: Features, item_name: Features
+27.01.2017 16:58:35	Загружен трекер: id: 1188, description: Совещания, label: Meetings, item_name: Meetings
+27.01.2017 16:58:35	Загружен трекер: id: 1189, description: Patches (v.6), label: Patches, item_name: Patches
+27.01.2017 16:58:35	Загружен трекер: id: 1190, description: Релизы v.2, label: Releases, item_name: Releases
+27.01.2017 16:58:35	Загружен трекер: id: 1191, description: Требования v.3, label: Requirements, item_name: Requirements
+27.01.2017 16:58:35	Загружен трекер: id: 1192, description: Риски v.2, label: Risks, item_name: Risks
+27.01.2017 16:58:35	Загружен трекер: id: 1193, description: Задачи (поддержка KANBAN) v.5, label: Tasks, item_name: Tasks

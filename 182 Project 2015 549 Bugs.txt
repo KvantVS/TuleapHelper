@@ -1,0 +1,182 @@
+182 Project 2015 
+549 Bugs
+=========================
+"field_id":22523,
+"label":"Резолюция",
+"name":"resolution_id",
+"type":"sb",
+"values":[
+{
+"id":16334,
+"label":"Принято в работу",
+"is_hidden":false
+},
+{
+"id":16335,
+"label":"Повторная",
+"is_hidden":false
+},
+{
+"id":16336,
+"label":"Не подтвердилось",
+"is_hidden":false
+},
+{
+"id":16337,
+"label":"Не воспроизводится",
+"is_hidden":false
+},
+{
+"id":16338,
+"label":"Исправляться не будет",
+"is_hidden":false
+},
+{
+"id":16339,
+"label":"Напомнить позже",
+"is_hidden":false
+},
+{
+"id":16340,
+"label":"Не является ошибкой",
+"is_hidden":false
+}
+],
+
+===============================
+field_id":22527,
+"label":"Назначена",
+"name":"assigned_to",
+"type":"msb",
+"values":[ id]
+
+======================
+"field_id":22520,
+"label":"Submitted by",
+==========
+"field_id":22529,
+"label":"Критичность",
+"name":"severity",
+"type":"sb",
+"values":[
+{
+"id":16356,
+"label":"None",
+"is_hidden":true
+},
+{
+"id":16357,
+"label":"Предложение",
+"is_hidden":true
+},
+{
+"id":16358,
+"label":"Тривиальная",
+"is_hidden":false
+},
+{
+"id":16359,
+"label":"Минорная",
+"is_hidden":false
+},
+{
+"id":16360,
+"label":"Мажорная",
+"is_hidden":false
+},
+{
+"id":16361,
+"label":"Критичная",
+"is_hidden":false
+},
+{
+"id":16362,
+"label":"Блокирующая",
+"is_hidden":false
+}
+],
+==============
+"field_id":22524,
+"label":"Текущий статус",
+"name":"status_id",
+"type":"sb",
+"values":[
+{
+"id":16341,
+"label":"Зарегистрировано",
+"is_hidden":false
+},
+{
+"id":16342,
+"label":"Доработка \/ исправление",
+"is_hidden":false
+},
+{
+"id":16343,
+"label":"На тестировании",
+"is_hidden":false
+},
+{
+"id":16344,
+"label":"Решено",
+"is_hidden":true
+},
+{
+"id":16345,
+"label":"Протестировано-исправлено",
+"is_hidden":false
+},
+{
+"id":16346,
+"label":"Протестировано-исправлено",
+"is_hidden":true
+},
+{
+"id":16347,
+"label":"Передано на тестирование (протестировано-исправлено в дополнении)",
+"is_hidden":true
+},
+{
+"id":16348,
+"label":"Установлено на боевом сервере",
+"is_hidden":false
+},
+{
+"id":16349,
+"label":"Отклонено",
+"is_hidden":false
+}
+],
+================
+"field_id":22511,
+"label":"Краткое описание",
+=======
+"field_id":22512,
+"label":"Детальное описание",
+=======
+"field_id":22530,
+"label":"Приоритет",
+"name":"field_4",
+"type":"sb",
+"values":[
+{
+"id":16363,
+"label":"Самый низкий",
+"is_hidden":false
+},
+{
+"id":16364,
+"label":"Низкий",
+"is_hidden":false
+},
+{
+"id":16365,
+"label":"Средний",
+"is_hidden":false
+},
+{
+"id":16366,
+"label":"Высокий",
+"is_hidden":false
+}
+================

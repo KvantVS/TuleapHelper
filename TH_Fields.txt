@@ -1,0 +1,70 @@
+540:
+"field_id": 22124,
+      "label": "Назначена",
+      "name": "assigned_to",
+      "type": "msb",
+"field_id": 22121,
+        "label": "Текущий статус",
+        "name": "status_id",
+        "type": "sb",
+        "values": [
+          {
+            "id": 16039,
+            "label": "Зарегистрировано",
+            "is_hidden": false
+          },
+          {
+            "id": 16040,
+            "label": "Доработка / исправление",
+            "is_hidden": false
+          },
+          {
+            "id": 16041,
+            "label": "На тестировании",
+            "is_hidden": false
+          },
+          {
+            "id": 16043,
+            "label": "Протестировано-исправлено",
+            "is_hidden": false
+          },
+          {
+            "id": 16046,
+            "label": "Установлено на боевом сервере",
+            "is_hidden": false
+          },
+          {
+            "id": 16047,
+            "label": "Отклонено",
+            "is_hidden": false
+          }
+        ],
+549:
+"field_id": 22527,
+      "label": "Назначена",
+      "name": "assigned_to",
+      "type": "msb",
+1161
+"field_id": 47848,
+      "label": "Назначена",
+      "name": "assigned_to",
+      "type": "msb",
+
+1172
+"field_id": 48296,
+      "label": "Назначена",
+      "name": "assigned_to",
+      "type": "msb",
+	  
+1183
+"field_id": 48744,
+      "label": "Назначена",
+      "name": "assigned_to",
+      "type": "msb",
+	  
+	  
+System.Collections.Generic.IDictionary<string, Newtonsoft.Json.Linq.JToken>.Keys	Count = 3	System.Collections.Generic.ICollection<string> {System.Collections.Generic.Dictionary<string, Newtonsoft.Json.Linq.JToken>.KeyCollection}
+
++		f.values.GetType()	{Name = "JArray" FullName = "Newtonsoft.Json.Linq.JArray"}	System.Type {System.RuntimeType}
+
++		f.values.GetType()	{Name = "JObject" FullName = "Newtonsoft.Json.Linq.JObject"}	System.Type {System.RuntimeType}
