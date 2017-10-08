@@ -78,7 +78,7 @@ namespace TuleapHelper
         {
             public int id { get; set; }
             public string uri { get; set; }
-            public Tracker tracker { get; set; }
+            public Tracker3 tracker { get; set; }  // todo !!!!!!! here was Tracker (not Tracker3)
             public Project project { get; set; }
             public int submitted_by { get; set; }
             public string submitted_on { get; set; }
@@ -133,6 +133,8 @@ namespace TuleapHelper
         {
             public int field_id { get; set; }
             public string label { get; set; }
+            public string name { get; set; }
+            public string type { get; set; }  // пока не используется
             public object values { get; set; }
             public FieldValues[] FValues { get; set; } 
         }

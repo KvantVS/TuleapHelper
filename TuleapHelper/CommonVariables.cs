@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.Configuration;
+using System.Windows.Forms;
 //using tc = TuleapHelper.TuleapClasses;
 
 namespace TuleapHelper
@@ -12,10 +14,62 @@ namespace TuleapHelper
     public static class CommonVariables
     {
         public static string tuleapHost = "https://tuleap.nat.kz/api/";
+        internal static string apiHost = "";
         public static TuleapClasses.UserInfo globalUserInfo = new TuleapClasses.UserInfo();// { user_id = "171", token = "207f8dd40f8732fd0623a4b567341400" } ;
         public static string user = "";
         public static string pass = "";
         public static TuleapClasses.Project[] globalProjects;
+        public static string projectFolder = ConfigurationManager.AppSettings.Get("projectFolder");
+        public static string settingsFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Settings.txt");
+        public static string sWorkingFolder = Application.StartupPath;
+        //public static string sWorkingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
+        public static string sZipTempFolder = Path.Combine(sWorkingFolder, "zippatch");
+        public static string remotePatchFolder_hotfix = @"\\buildkrg\GE-ESEDO\Сборка на тестирование\1.1.0";
+        public static string remotePatchFolder_develop = @"\\buildkrg\GE-ESEDO\Builds";
+        //$@"\\buildkrg\GE-ESEDO\Builds\JS.ESEDO.Develop.v{version}.{pathToPatchFile.Substring(1, pathToPatchFile.Length-1)}.msi";
+        public static string localPatchFolder = $"{Path.Combine(Application.StartupPath, "Patches")}";
+        public static string patchFilenameTemplate_hotfix = @"DONTUSE-ITS-A-TEST_update_{version}_{sdate}_{patchNumber} of {username} ({slibs}).zip";
+    }
+
+    public static class CommonConstants
+    {
+        public const string settingProjectFolder = "projectFolder";
+
+        //todo: автозагрузку из папки проекта, настройку сокращенных имен. Автонахождение новых проектов (библиотек)
+        public static readonly Dictionary<string, string> libsShortnames = new Dictionary<string, string>
+        {
+            {"JS.EDO.AccountingIntegration", "AI"},
+            {"JS.EDO.Administration", "ADM" },
+            {"JS.EDO.Assignments", "ASM" },
+            {"JS.EDO.Assigments.Logic", "ASM.Logic" },
+            {"JS.EDO.Assignments.Interaction", "ASMInt" },
+            {"JS.EDO.Blanks", "BL" },
+            {"JS.EDO.CertifiedExpertOrganizations", "CEO" },
+            {"JS.EDO.CommonInfo", "CI" },
+            {"JS.EDO.Controls", "CON" },
+            {"JS.EDO.Dictionaries", "DIC" },
+            {"JS.EDO.DictionariesLogic", "DICLogic" },
+            {"JS.EDO.DictionariesSync", "DICSync" },
+            {"JS.EDO.DigitalSignature", "DS" },
+            {"JS.EDO.Equipments", "EQU" },
+            {"JS.EDO.Host", "HOST" },
+            {"JS.EDO.ImportExcelData", "IED" },
+            {"JS.EDO.Indicators", "IND" },
+            {"JS.EDO.Interaction", "INT" },
+            {"JS.EDO.Interaction.AccreditedOrgs", "IntAO" },
+            {"JS.EDO.InvolvementExperts", "InvExp" },
+            {"JS.EDO.Jobs", "JOB" },
+            {"JS.EDO.Notification", "NOT" },
+            {"JS.EDO.Planning", "PLN" },
+            {"JS.EDO.Reports", "REPS" },
+            {"JS.EDO.Search", "SRC" },
+            {"JS.EDO.SearchMaterialsPlugin", "SMP" },
+            {"JS.EDO.SearchMaterialWordAddinWeb", "SMWAW" },
+            {"JS.EDO.Service", "SVC" },
+            {"JS.EDO.Templates", "TMP" },
+            {"JS.EDO.WordEditor", "WRD" },
+            {"TestProjects", "TEST" }
+        };
     }
 
     public static class CommonFunctions

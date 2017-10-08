@@ -51,7 +51,7 @@ namespace TuleapHelper
         public static string sWorkingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
         public static string sZipTempFolder = Path.Combine(sWorkingFolder, "zippatch");
         public string sAttr = "";
-        public string sEsedoProjectFolder = @"C:\NAT_ESEDO\src\CopiedManually\git-esedo\ESEDO_Sources";
+        public string sEsedoProjectFolder = ConfigurationManager.AppSettings.Get(CommonConstants.settingProjectFolder) + @"\ESEDO_Sources";//  @"C:\NAT_ESEDO\src\CopiedManually\git-esedo\ESEDO_Sources";
         public string remotePatchFolder = @"\\buildkrg\GE-ESEDO\Сборка на тестирование\1.1.0";
 
         public bool patchButton = false;
@@ -147,14 +147,20 @@ namespace TuleapHelper
         
         private void AppExit(object sender, EventArgs e)
         {
-            try
+            // --- Сохраняем токен в settings
+            Configurator.SaveConfig();
+
+            if (chb_deleteTokenOnClose.Checked)
             {
-                System.Net.HttpStatusCode rc;// = HttpStatusCode.Accepted;
-                var r = HttpLevel.HttpDeleteJSON($"tokens/{CommonVariables.globalUserInfo.token}", "", true, out rc);
-                Log($"Удаляем токен ... {rc}");
+                try
+                {
+                    System.Net.HttpStatusCode rc;// = HttpStatusCode.Accepted;
+                    var r = HttpLevel.HttpDeleteJSON($"tokens/{CommonVariables.globalUserInfo.token}", "", true, out rc);
+                    Log($"Удаляем токен ... {rc}");
+                }
+                catch
+                { }
             }
-            catch
-            { }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -163,31 +169,52 @@ namespace TuleapHelper
 
             // --- загрузка настроек
             Log("Загружаем настройки...");
+            if (System.IO.File.Exists(CommonVariables.settingsFile))
+            {
+                CommonVariables.projectFolder = Configurator.LoadParam(CommonConstants.settingProjectFolder);
+                CommonVariables.globalUserInfo.user_id = Configurator.LoadParam("user_id");
+                CommonVariables.globalUserInfo.token = Configurator.LoadParam("token");
+                CommonVariables.tuleapHost = Configurator.LoadParam("tuleapHost");
+                CommonVariables.apiHost = CommonVariables.tuleapHost + "/api/";
+                CommonVariables.user = Configurator.LoadParam("user");
+                CommonVariables.pass = Configurator.LoadParam("pass");  //todo: не хранить в конфиге
+            }
+            else
+                Log("Не найден файл настроек. Задайте настройки вручную.");
 
+            //try
+            //{
+            //    CommonVariables.globalUserInfo.user_id = ConfigurationManager.AppSettings.Get("user_id");
+            //    CommonVariables.globalUserInfo.token = ConfigurationManager.AppSettings.Get("authToken");
+            //    CommonVariables.tuleapHost = tb_Host.Text + "/api/";
+            //    CommonVariables.projectFolder = ConfigurationManager.AppSettings.Get(CommonConstants.settingProjectFolder);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log("Ошибка: " + ex);
+            //}
+
+            // --- Загружаем библиотеки для чекбоксов
             try
             {
-                CommonVariables.globalUserInfo.user_id = ConfigurationManager.AppSettings.Get("user_id");
-                CommonVariables.globalUserInfo.token = ConfigurationManager.AppSettings.Get("authToken");
-                CommonVariables.tuleapHost = tb_Host.Text + "/api/";
+                string[] libFolders = Directory.GetDirectories(sEsedoProjectFolder); // todo: sEsedoProjectFolder сохранять в настройки в файле и загружать из него
+                var i = 0;
+                foreach (Control c in panel_Libs.Controls)
+                {
+                    if (c is CheckBox)
+                    {
+                        (c as CheckBox).Text = libFolders[i].Substring(sEsedoProjectFolder.Length + 1);
+                        i++;
+                        if (i >= libFolders.Count())
+                            break;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Log("Ошибка: " + ex);
+                Log(ex.Message);
             }
-            
-            // --- Загружаем библиотеки для чекбоксов
-            string[] libFolders = Directory.GetDirectories(sEsedoProjectFolder); // todo: sEsedoProjectFolder сохранять в настройки в файле и загружать из него
-            var i = 0;
-            foreach(Control c in panel_Libs.Controls)
-            {
-                if (c is CheckBox)
-                {
-                    (c as CheckBox).Text = libFolders[i].Substring(sEsedoProjectFolder.Length + 1);
-                    i++;
-                    if (i >= libFolders.Count())
-                        break;
-                }
-            }
+            //System.IO.DirectoryNotFoundException: 
 
             // --- Создаем рабочие директории, если их не существует
             //if (!Directory.Exists(sWorkingFolder))
@@ -195,14 +222,14 @@ namespace TuleapHelper
 
             if (!Directory.Exists(sZipTempFolder))
                 Directory.CreateDirectory(sZipTempFolder);
-            
+
             // --- Для сертификата https
-            //System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (
-            //    object s,
-            //    System.Security.Cryptography.X509Certificates.X509Certificate certificate,
-            //    System.Security.Cryptography.X509Certificates.X509Chain chain,
-            //    System.Net.Security.SslPolicyErrors sslPolicyErrors)
-            //{ return true; };
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (
+                object s,
+                System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+                System.Security.Cryptography.X509Certificates.X509Chain chain,
+                System.Net.Security.SslPolicyErrors sslPolicyErrors)
+            { return true; };
 
             Log("OK");
         }
@@ -444,21 +471,24 @@ namespace TuleapHelper
             var d = new Dictionary<string, object>();
             string jsonq = "";
 
-            // --- Вытаскиваем баги. ID проектов нам заранее известны (181 и 182), если что - добавить. У каждого свой трекер багов (540 и 549 соотв.)
+            // --- Вытаскиваем баги. ID проектов нам заранее известны. У каждого свой трекер багов
             foreach (var p in CommonVariables.globalProjects)
                 foreach (var t in p.trackers)
                 {
                     if (t.label == "Bugs")
                     {
+                        // --- Подготавливаем выборку багов-----------------------------------------------------
                         d.Clear();
                         jsonq = "";
-
+                        
                         var fieldNaznachenaId = t.fields.Where(f => f.label == "Назначена").FirstOrDefault().field_id.ToString();
 
+                        // --- Будем выбирать баги с "Резолюцией" только "Принято в работу" и "Повторная"
                         var fieldResolution = t.fields.Where(f => f.label == "Резолюция").FirstOrDefault();
                         var fieldResolutionId = fieldResolution.field_id.ToString();
                         var fieldResolutionValues = fieldResolution.FValues.Where(f => f.label == "Принято в работу" || f.label == "Повторная").Select(f => f.id).ToArray();
 
+                        // --- , только у которых "текущий статус" стоит "Зарегистрировано" или "Доработка\исправление"
                         var fieldCurStatus = t.fields.Where(f => f.label == "Текущий статус").FirstOrDefault();
                         var fieldCurStatusId = fieldCurStatus.field_id.ToString();
                         var fieldCurStatusValues = fieldCurStatus.FValues.Where(f => f.label == "Зарегистрировано" || f.label == "Доработка / исправление").Select(f=>f.id).ToArray();
@@ -483,6 +513,13 @@ namespace TuleapHelper
                         {
                             var jsonArtifact = HttpLevel.HttpGet(a.uri, true);
                             TuleapClasses.Artifact art = JsonConvert.DeserializeObject<TuleapClasses.Artifact>(jsonArtifact);
+
+                            // --- Заполним свойство art.project.trackers (иначе оно было бы null)
+                            // , чтобы удобно получать доступ к различным трекерам того же проекта, в котором находится баг
+                            // Можно это закоментировать, а обращаться тогда к переменной CommonVariables.globalProjects по id-шнику art.project.id
+                            // --- 
+                            //var jsonProjectTrackers = HttpLevel.HttpGet($"projects/{art.project.id}/trackers", true);
+                            //art.project.trackers = JsonConvert.DeserializeObject<TuleapClasses.Tracker3[]>(jsonProjectTrackers).ToList();
 
                             // values у артифакта - это набор полей, с их айдишником в теге field_id, и их значением в теге value
                             ListViewItem li = new ListViewItem(a.id.ToString() + " - " + art.values.Where(v => v.label == "Краткое описание").FirstOrDefault().value);
@@ -715,91 +752,6 @@ namespace TuleapHelper
             */
         }
 
-        public void CreatePhysicalPatch()
-        {
-            patchButton = false;
-
-            // --- очистить zip-директорию
-            var dirs = Directory.GetDirectories(sZipTempFolder);
-            foreach (var dir in dirs)
-                Directory.Delete(dir, true);
-
-            var files = Directory.GetFiles(sZipTempFolder);
-            foreach (var f in files)
-                File.Delete(f);
-
-            // --- 2. Работаем с патчем
-            Directory.SetCurrentDirectory(sWorkingFolder);
-            //string slibs = string.Join("_", libsShortnames.Values);
-
-            // --- 2.1 копируем либы из проекта во временную директорию будущего патча
-            foreach (var libName in libsToPatch)
-            {
-                var srcFolder = Path.Combine(sEsedoProjectFolder, libName, "obj", "Debug");
-                var destFolder = Path.Combine(sZipTempFolder, "App", "bin");
-
-                if (!Directory.Exists(destFolder))
-                    Directory.CreateDirectory(destFolder);
-                if (!Directory.Exists(srcFolder))
-                {
-                }
-
-                var fileDLL = libName + ".dll";
-                var filePDB = libName + ".pdb";
-
-                if (File.Exists(Path.Combine(srcFolder, fileDLL)))
-                {
-                    File.Copy(Path.Combine(srcFolder, fileDLL), Path.Combine(destFolder, fileDLL), true);
-                        // 'System.IO.FileNotFoundException' 
-                    File.Copy(Path.Combine(srcFolder, filePDB), Path.Combine(destFolder, filePDB), true);
-                }
-                else
-                {
-                    // todo: убрать библиотеку из названия патча (надо или нет)
-                    Log($"Не найдена бибилиотека {fileDLL} в каталоге {srcFolder}");
-                }
-            }
-
-            // --- 2.2 создаем zip-файл из временной директории
-            var version = "1.12.4";
-            var sdate = DateTime.Now.Date.ToString("yyyy.MM.dd");
-            var username = "Vadim.Sidorchuk";
-                // todo: получение имени пользователя по id'шнику в тулипе (globalUserInfo.user_id)
-            var patchNumber = 1;
-            string slibs = string.Join("_",
-                (libsShortnames.Where(kvp => libsToPatch.Contains(kvp.Key)).Select(kvp => kvp.Value)));
-
-            sZipFileNameTemplate =
-                $"DONTUSE-ITS-A-TEST_update_{version}_{sdate}_{patchNumber} of {username} ({slibs}).zip";
-            //update_1.12.4_2016.10.05_1 of Vadim.Sidorchuk (ASM_SqlFunctions_CommonInfo).zip
-
-            while (File.Exists(sZipFileNameTemplate))
-            {
-                patchNumber++;
-                sZipFileNameTemplate = $"DONTUSE-ITS-A-TEST_update_{version}_{sdate}_{patchNumber} of {username} ({slibs}).zip";
-                //todo: галочку "использовать существующий патч на эту дату, или создать новый?"
-            }
-
-            try
-            {    
-                System.IO.Compression.ZipFile.CreateFromDirectory(sZipTempFolder, sZipFileNameTemplate);
-            }
-            catch (System.IO.IOException ex)
-            {
-                Log(ex.ToString());
-            }
-
-            // todo: sleep
-            // --- 2.3 копируем zip в BuildKRG + в локальную какую то папку
-            if (File.Exists(sZipFileNameTemplate))
-                File.Copy(sZipFileNameTemplate, Path.Combine(remotePatchFolder, sZipFileNameTemplate), true);
-            else
-            {
-                Log($"Файл {sZipFileNameTemplate} не найден.");
-            }
-        }
-
-
         private void MenuBeginWorkOnBug_Click(object sender, EventArgs e)
         {
             // Начинаем работу над багом:
@@ -807,9 +759,10 @@ namespace TuleapHelper
             // 2. Создаем задачу
             // 3. Апдейтим баг (статус)
 
+            TuleapClasses.Artifact selectedBug = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact);
             // --- 1. Получим id нужных нам трекеров (Патчи и Задания)
-            int projId = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact).project.id;
-            int bugId = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact).id;
+            int projId = selectedBug.project.id;
+            int bugId = selectedBug.id;
             TuleapClasses.Project p = CommonVariables.globalProjects.SingleOrDefault(pr => pr.id == projId);
             int patchTrackerId = p.trackers.SingleOrDefault(t => t.label == "Patches").id;
             int tasksTrackerId = p.trackers.SingleOrDefault(t => t.label == "Tasks").id;
@@ -893,34 +846,6 @@ namespace TuleapHelper
             var j = HttpLevel.HttpGet("trackers/" + tbTracker.Text, true);
             TranscodeJson(j);
         }
-
-        private void MenuCreatePatchT1_Click(object sender, EventArgs e)
-        {
-            //panel_Libs.Left = 0;
-            //panel_Libs.Top = 0;
-            //panel_Libs.Visible = true;
-            //patchButton = true;
-            
-            
-            //var bugId = (listView1.SelectedItems[0].Tag as Artifact).id;
-            //var projectId = (listView1.SelectedItems[0].Tag as Artifact).project.id;
-
-            // 1
-            // todo: CreateArtifactInTuleap("patch", bugId, projectId)
-
-            // --- 2. Работаем с патчем (перенес в кнопку ОК на панели библиотек)
-            //CreatePhysicalPatch();
-
-            /*
-            // --- 2.3 копируем zip в BuildKRG + в локуальную какую то папку
-            if (File.Exists(sZipFileNameTemplate))
-                File.Copy(sZipFileNameTemplate, Path.Combine(remotePatchFolder, sZipFileNameTemplate));
-            */
-            // --- 2.4 SQL
-            // --- 2.5 Шаблоны
-
-
-        }
         
         private void btn_libsPanelOk_Click(object sender, EventArgs e)
         {
@@ -938,8 +863,8 @@ namespace TuleapHelper
                 }
             }
 
-            if (patchButton)
-                CreatePhysicalPatch();
+            //if (patchButton)
+            //    FileSystem.CreatePhysicalPatch(libsToPatch, "1.15");
 
             panel_Libs.Visible = false;
         }
@@ -999,35 +924,6 @@ namespace TuleapHelper
             Text = $"formX: {Width}; memoX: {textBox1.Width}; panel2_X: {splitContainer1.Panel2.Width}";
         }
 
-        private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void создатьПатчВТулипеToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MenuCreateTuleapPatch_Click(object sender, EventArgs e)
-        {
-            //var bugId = (listView1.SelectedItems[0].Tag as Artifact).id;
-            //var projectId = (listView1.SelectedItems[0].Tag as Artifact).project.id;
-
-            // 1
-            // todo: CreateArtifactInTuleap("patch", bugId, projectId)
-
-            // --- 2. Работаем с патчем (перенес в кнопку ОК на панели библиотек)
-            //CreatePhysicalPatch();
-
-            /*
-            // --- 2.3 копируем zip в BuildKRG + в локуальную какую то папку
-            if (File.Exists(sZipFileNameTemplate))
-                File.Copy(sZipFileNameTemplate, Path.Combine(remotePatchFolder, sZipFileNameTemplate));
-            */
-            // --- 2.4 SQL
-            // --- 2.5 Шаблоны
-        }
 
         private void tb_Host_TextChanged(object sender, EventArgs e)
         {
@@ -1036,65 +932,70 @@ namespace TuleapHelper
 
         private void MenuCreatePatchT2_Click(object sender, EventArgs e)
         {
+            string mess;
             var bug = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact);
-            int projId = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact).project.id;
-            int bugId = (listView1.SelectedItems[0].Tag as TuleapClasses.Artifact).id;
+            int projId = bug.project.id;
+            int bugId = bug.id;
             int trackerId;
 
-            /* универсальное нахождение трекера патча */
-            trackerId = bug.project.trackers.Where(t => t.item_name.ToLower() == "patches").FirstOrDefault().id;
+            Log("...Создаем патч для Т2.");
 
-            TuleapPatchCreateForm form2 = new TuleapPatchCreateForm(bug);
+            /* универсальное нахождение трекера патча */
+            // var1)
+            // trackerId = bug.project.trackers.Where(t => t.item_name.ToLower() == "patches").FirstOrDefault().id;
+            // var2)
+
+            var p = CommonVariables.globalProjects.Where(gp => gp.id == bug.project.id).SingleOrDefault();
+            trackerId = p.trackers.Where(t => t.item_name.ToLower() == "patches").FirstOrDefault().id;
+
+            Log($"projID={projId}");
+            Log($"bugId={bugId}");
+            //Log($"trackerId={trackerId}");
+
+            TuleapPatchCreateForm form2 = new TuleapPatchCreateForm(false, bug);
             var b = form2.ShowDialog();
+            Log($"naznacheno={form2.Naznacheno}");
+            Log($"BuildFile={form2.BuildFile}");
+            Log($"changes={form2.Changes}");
             if (b == DialogResult.OK)
             {
                 var nazn = form2.Naznacheno;
                 var changes = form2.Changes;
+                var version = form2.Version;
 
-                switch (bug.project.label)
-                {
-                    case "EISKVE-2016-R":
-                    case "EISKVE-2016-GP":
-                    case "EISKVE-2015-GP":
-                        trackerId = 1189;
-                        break;
-                    case "EISKVE-2017-R-1":
-                        trackerId = 1167;
-                        break;
-                    case "EISKVE-2017-R-2":
-                        trackerId = 1178;
-                        break;
-                    default:
-                        trackerId = 0;
-                        break;
-                }
+                form2.Dispose();
+                
                 if (trackerId == 0)
                 {
-                    Log("Не найден корректный трекер патча");
+                    Log($"Не найден корректный трекер патча (trackerId={trackerId}");
                     //todo сделать определение трекера
                 }
                 else
                 {
-                    var s = TuleapLevel.CreatePatchInTuleap(true, trackerId, null, "", "", bugId, bug);  //1189 - patches in 2016GP
-                    Log(s);
+                    var buildFilePath = Path.GetFileNameWithoutExtension(form2.BuildFile);
+                    Log($"trackerId(еще раз) = {trackerId}");
+                    //var s = TuleapLevel.CreatePatchInTuleap(out mess, false, null, null, null, trackerId, null, buildFilePath, "", version, bug);  //1189 - patches in 2016GP
+                    //Log(s);
                 }
             }
         }
 
         private void MenuCreateBuildT1_Click(object sender, EventArgs e)
         {
+            string mess;
             var li = listView1.SelectedItems[0];
             
             TuleapClasses.Artifact art = li.Tag as TuleapClasses.Artifact;
             int projId = (li.Tag as TuleapClasses.Artifact).project.id;
             int bugId = (li.Tag as TuleapClasses.Artifact).id;
 
-            TuleapPatchCreateForm form2 = new TuleapPatchCreateForm(art);
+            TuleapPatchCreateForm form2 = new TuleapPatchCreateForm(true, art);
             var b = form2.ShowDialog();
             if (b == DialogResult.OK)
             {
                 var nazn = form2.Naznacheno;
                 var changes = form2.Changes;
+                var version = form2.Version;
 
                 int trackerId;
                 switch ((li.Tag as TuleapClasses.Artifact).project.label)
@@ -1127,8 +1028,7 @@ namespace TuleapHelper
                     //todo переделать под полный путь файла
                     var buildFilePath = Path.GetFileNameWithoutExtension(form2.BuildFile);
                     Log(string.Format("naz:{0} file:{1} changes:{2}", nazn, buildFilePath, changes));
-                    var s = TuleapLevel.CreatePatchInTuleap(true, trackerId, null, buildFilePath, changes, bugId, art, nazn); //#2107 //1189 - patches in 2016GP
-                    //////////Log(s);
+                    //var s = TuleapLevel.CreatePatchInTuleap(out mess, true, null, null, null, trackerId, null, buildFilePath, changes, version, art); //#2107 //1189 - patches in 2016GP
                 }
             }
            
@@ -1173,6 +1073,17 @@ namespace TuleapHelper
                 }   
             }
             
+        }
+
+        private void menu_settings_Click(object sender, EventArgs e)
+        {
+            frmSettings frm2 = new frmSettings();
+            frm2.Show();
+        }
+
+        private void contextMenuStrip2_Opening(object sender, CancelEventArgs e)
+        {
+
         }
     }
 

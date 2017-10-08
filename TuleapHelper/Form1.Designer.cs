@@ -35,10 +35,10 @@
             this.MenuCreatePatchT1 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuCreatePatchT2 = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuCreateBuildT1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuCreateTuleapPatch = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chb_deleteTokenOnClose = new System.Windows.Forms.CheckBox();
             this.button7 = new System.Windows.Forms.Button();
             this.panel_Libs = new System.Windows.Forms.Panel();
             this.btn_panelCancel = new System.Windows.Forms.Button();
@@ -123,6 +123,8 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menu_settings = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -131,6 +133,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel_Libs.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip2
@@ -141,8 +144,7 @@
             this.MenuEndWorkOnBug,
             this.MenuCreatePatchT1,
             this.MenuCreatePatchT2,
-            this.MenuCreateBuildT1,
-            this.MenuCreateTuleapPatch});
+            this.MenuCreateBuildT1});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(236, 136);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
@@ -162,10 +164,10 @@
             // 
             // MenuCreatePatchT1
             // 
+            this.MenuCreatePatchT1.Enabled = false;
             this.MenuCreatePatchT1.Name = "MenuCreatePatchT1";
             this.MenuCreatePatchT1.Size = new System.Drawing.Size(235, 22);
             this.MenuCreatePatchT1.Text = "Создать патч для Т1";
-            this.MenuCreatePatchT1.Click += new System.EventHandler(this.MenuCreatePatchT1_Click);
             // 
             // MenuCreatePatchT2
             // 
@@ -176,17 +178,11 @@
             // 
             // MenuCreateBuildT1
             // 
+            this.MenuCreateBuildT1.Enabled = false;
             this.MenuCreateBuildT1.Name = "MenuCreateBuildT1";
             this.MenuCreateBuildT1.Size = new System.Drawing.Size(235, 22);
             this.MenuCreateBuildT1.Text = "Создать сборку для Т1";
             this.MenuCreateBuildT1.Click += new System.EventHandler(this.MenuCreateBuildT1_Click);
-            // 
-            // MenuCreateTuleapPatch
-            // 
-            this.MenuCreateTuleapPatch.Name = "MenuCreateTuleapPatch";
-            this.MenuCreateTuleapPatch.Size = new System.Drawing.Size(235, 22);
-            this.MenuCreateTuleapPatch.Text = "Создать патч в тулипе";
-            this.MenuCreateTuleapPatch.Click += new System.EventHandler(this.MenuCreateTuleapPatch_Click);
             // 
             // splitContainer1
             // 
@@ -217,15 +213,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(0, 28);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1251, 506);
+            this.tabControl1.Size = new System.Drawing.Size(1251, 478);
             this.tabControl1.TabIndex = 47;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chb_deleteTokenOnClose);
             this.tabPage1.Controls.Add(this.button7);
             this.tabPage1.Controls.Add(this.panel_Libs);
             this.tabPage1.Controls.Add(this.button6);
@@ -261,10 +258,20 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(1243, 480);
+            this.tabPage1.Size = new System.Drawing.Size(1243, 452);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Bugs";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chb_deleteTokenOnClose
+            // 
+            this.chb_deleteTokenOnClose.AutoSize = true;
+            this.chb_deleteTokenOnClose.Location = new System.Drawing.Point(766, 241);
+            this.chb_deleteTokenOnClose.Name = "chb_deleteTokenOnClose";
+            this.chb_deleteTokenOnClose.Size = new System.Drawing.Size(238, 17);
+            this.chb_deleteTokenOnClose.TabIndex = 77;
+            this.chb_deleteTokenOnClose.Text = "Очищать токен при закрытии программы";
+            this.chb_deleteTokenOnClose.UseVisualStyleBackColor = true;
             // 
             // button7
             // 
@@ -325,7 +332,7 @@
             this.panel_Libs.Controls.Add(this.checkBox3);
             this.panel_Libs.Controls.Add(this.checkBox2);
             this.panel_Libs.Controls.Add(this.checkBox1);
-            this.panel_Libs.Location = new System.Drawing.Point(327, 406);
+            this.panel_Libs.Location = new System.Drawing.Point(529, 419);
             this.panel_Libs.Margin = new System.Windows.Forms.Padding(4);
             this.panel_Libs.Name = "panel_Libs";
             this.panel_Libs.Size = new System.Drawing.Size(554, 480);
@@ -1178,7 +1185,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(1243, 480);
+            this.tabPage2.Size = new System.Drawing.Size(1243, 452);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Tasks";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1193,13 +1200,31 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(1251, 229);
+            this.textBox1.Size = new System.Drawing.Size(1251, 223);
             this.textBox1.TabIndex = 10;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menu_settings});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1257, 24);
+            this.menuStrip1.TabIndex = 49;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menu_settings
+            // 
+            this.menu_settings.Name = "menu_settings";
+            this.menu_settings.Size = new System.Drawing.Size(79, 20);
+            this.menu_settings.Text = "&Настройки";
+            this.menu_settings.Click += new System.EventHandler(this.menu_settings_Click);
             // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1257, 759);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
@@ -1217,7 +1242,10 @@
             this.tabPage1.PerformLayout();
             this.panel_Libs.ResumeLayout(false);
             this.panel_Libs.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1311,11 +1339,13 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.TabPage tabPage2;
         public System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ToolStripMenuItem MenuCreateTuleapPatch;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menu_settings;
+        private System.Windows.Forms.CheckBox chb_deleteTokenOnClose;
     }
 }
 

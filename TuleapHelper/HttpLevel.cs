@@ -98,6 +98,7 @@ namespace TuleapHelper
 
         public static string HttpPostJSON(string url, string json, bool useToken, out System.Net.HttpStatusCode statusCode)
         {
+            statusCode = 0;
             HttpWebRequest req = WebRequest.Create(new Uri(CommonVariables.tuleapHost + url)) as HttpWebRequest;
             req.Method = "POST";
             req.ContentType = "application/json";  //req.ContentType = "application/x-www-form-urlencoded";
@@ -115,13 +116,27 @@ namespace TuleapHelper
 
             // Pick up the response:
             string result = null;
-            using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+            try
             {
-                statusCode = resp.StatusCode;
-                StreamReader reader = new StreamReader(resp.GetResponseStream());
-                result = reader.ReadToEnd();
+                using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
+                {
+                    statusCode = resp.StatusCode;
+                    StreamReader reader = new StreamReader(resp.GetResponseStream());
+                    result = reader.ReadToEnd();
+                }
             }
-
+            catch (System.Net.WebException ex)
+            {
+                statusCode = ((System.Net.HttpWebResponse)ex.Response).StatusCode;
+                result = null;
+                //throw;
+            }
+            catch (Exception ex)
+            {
+                result = null;
+                //throw ex;
+            }
+            
             return result;
         }
 
