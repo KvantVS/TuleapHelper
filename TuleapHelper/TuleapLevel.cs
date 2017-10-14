@@ -32,12 +32,6 @@ namespace TuleapHelper
                 //Log($"Ответ: {statusCode}");
             }
             return statusCode;
-
-            // TODO: сделать сохранение токена в файл, или реестр
-            //Configuration cfg = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            //cfg.AppSettings.Settings.Add("user_id", globalUserInfo.user_id);
-            //cfg.AppSettings.Settings.Add("authToken", globalUserInfo.token);
-            //cfg.Save();
         }
 
         public static string CreatePatchInTuleap(
@@ -70,8 +64,6 @@ namespace TuleapHelper
             // -------------------------------------------
             // Получаем ID'шники необходимых полей трекера
             // -------------------------------------------
-                //if (t != null)
-                //{
             // --- Нужные поля ---
             // Назначено, 
             // Кго уведомлять, 
@@ -141,6 +133,7 @@ namespace TuleapHelper
 
             // --- nomer patcha (просто имя файла)
             var patchFullFilePath = "";
+
             if (isBuildForT1)
             {
                 if (pathToPatchFile[0] == '#')  // todo: для сборки на Т1

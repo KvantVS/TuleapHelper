@@ -19,7 +19,8 @@ namespace TuleapHelper
         public static string user = "";
         public static string pass = "";
         public static TuleapClasses.Project[] globalProjects;
-        public static string projectFolder = ConfigurationManager.AppSettings.Get("projectFolder");
+        public static string projectFolder = "";// ConfigurationManager.AppSettings.Get("projectFolder");
+        public static string srcFolder = "";
         public static string settingsFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Settings.txt");
         public static string sWorkingFolder = Application.StartupPath;
         //public static string sWorkingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);

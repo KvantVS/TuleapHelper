@@ -1,0 +1,1422 @@
+2016-R, Patches
+
+{
+  "id": 544,
+  "uri": "trackers/544",
+  "html_url": "/plugins/tracker/?tracker=544",
+  "project": {
+    "id": 181,
+    "uri": "projects/181",
+    "label": "EISKVE-2016-R"
+  },
+  "label": "Patches",
+  "description": "Патчи v.5",
+  "item_name": "Patches",
+  "fields": [
+    {
+      "field_id": 22286,
+      "label": "Artifact ID",
+      "name": "artifact_id",
+      "type": "aid",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22287,
+      "label": "Submitted by",
+      "name": "submitted_by",
+      "type": "subby",
+      "values": [
+        {
+          "id": 121,
+          "label": "alexandr_tsaregorodt",
+          "user_reference": {
+            "id": "121",
+            "uri": "users/121",
+            "real_name": "Alexandr A. Tsaregorodtsev (alexandr_tsaregorodt)",
+            "username": "alexandr_tsaregorodt"
+          }
+        },
+        {
+          "id": 153,
+          "label": "dilmurod_karimberdie",
+          "user_reference": {
+            "id": "153",
+            "uri": "users/153",
+            "real_name": "Dilmurod I. Karimberdiev (dilmurod_karimberdie)",
+            "username": "dilmurod_karimberdie"
+          }
+        },
+        {
+          "id": 154,
+          "label": "oleg_gorlach",
+          "user_reference": {
+            "id": "154",
+            "uri": "users/154",
+            "real_name": "Oleg V. Gorlach (oleg_gorlach)",
+            "username": "oleg_gorlach"
+          }
+        },
+        {
+          "id": 165,
+          "label": "sergey_lebedev",
+          "user_reference": {
+            "id": "165",
+            "uri": "users/165",
+            "real_name": "Sergey S. Lebedev (sergey_lebedev)",
+            "username": "sergey_lebedev"
+          }
+        },
+        {
+          "id": 116,
+          "label": "sergey_shpakovskiy",
+          "user_reference": {
+            "id": "116",
+            "uri": "users/116",
+            "real_name": "Sergey V. Shpakovskiy (sergey_shpakovskiy)",
+            "username": "sergey_shpakovskiy"
+          }
+        },
+        {
+          "id": 171,
+          "label": "vadim_sidorchuk",
+          "user_reference": {
+            "id": "171",
+            "uri": "users/171",
+            "real_name": "Vadim V. Sidorchuk (vadim_sidorchuk)",
+            "username": "vadim_sidorchuk"
+          }
+        },
+        {
+          "id": 114,
+          "label": "valeriy_suhorukov",
+          "user_reference": {
+            "id": "114",
+            "uri": "users/114",
+            "real_name": "Valeriy A. Suhorukov (valeriy_suhorukov)",
+            "username": "valeriy_suhorukov"
+          }
+        },
+        {
+          "id": 152,
+          "label": "yuriy_chsheglov",
+          "user_reference": {
+            "id": "152",
+            "uri": "users/152",
+            "real_name": "Yuriy V. Chsheglov (yuriy_chsheglov)",
+            "username": "yuriy_chsheglov"
+          }
+        }
+      ],
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": "users",
+        "list": [
+          {
+            "id": 0,
+            "label": "artifact_submitters"
+          }
+        ]
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": []
+    },
+    {
+      "is_time_displayed": true,
+      "field_id": 22288,
+      "label": "Submitted on",
+      "name": "open_date",
+      "type": "subon",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": "2017-05-08 19:39"
+    },
+    {
+      "field_id": 22297,
+      "label": "Статус",
+      "name": "status_id",
+      "type": "sb",
+      "values": [
+        {
+          "id": 16174,
+          "label": "Запланирован",
+          "is_hidden": false
+        },
+        {
+          "id": 16175,
+          "label": "В разработке",
+          "is_hidden": false
+        },
+        {
+          "id": 16179,
+          "label": "Передан на тестирование",
+          "is_hidden": false
+        },
+        {
+          "id": 16180,
+          "label": "Установлен на тестовый сервер",
+          "is_hidden": false
+        },
+        {
+          "id": 16181,
+          "label": "Протестирован",
+          "is_hidden": false
+        },
+        {
+          "id": 16182,
+          "label": "Рекомендован к обновлению",
+          "is_hidden": false
+        },
+        {
+          "id": 16183,
+          "label": "Установлен на боевом сервере",
+          "is_hidden": false
+        }
+      ],
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": "static",
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": [
+        {
+          "id": 16174,
+          "label": "Запланирован"
+        }
+      ]
+    },
+    {
+      "field_id": 22303,
+      "label": "Ветка",
+      "name": "field_1",
+      "type": "sb",
+      "values": [
+        {
+          "id": 16184,
+          "label": "Develop",
+          "is_hidden": false
+        },
+        {
+          "id": 16185,
+          "label": "Feature",
+          "is_hidden": false
+        },
+        {
+          "id": 16186,
+          "label": "Release",
+          "is_hidden": false
+        },
+        {
+          "id": 16187,
+          "label": "HotFix",
+          "is_hidden": false
+        },
+        {
+          "id": 16188,
+          "label": "Master",
+          "is_hidden": false
+        }
+      ],
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": "static",
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": [
+        {
+          "id": 16187,
+          "label": "HotFix"
+        }
+      ]
+    },
+    {
+      "field_id": 22304,
+      "label": "Код ветки Feature",
+      "name": "_feature_1",
+      "type": "string",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": ""
+    },
+    {
+      "field_id": 22306,
+      "label": "Назначено",
+      "name": "assigned_to",
+      "type": "msb",
+      "values": [
+        {
+          "id": 118,
+          "label": "aktoty_bekmaganbetov",
+          "user_reference": {
+            "id": "118",
+            "uri": "users/118",
+            "real_name": "Aktoty B. Bekmaganbetova (aktoty_bekmaganbetov)",
+            "username": "aktoty_bekmaganbetov"
+          }
+        },
+        {
+          "id": 121,
+          "label": "alexandr_tsaregorodt",
+          "user_reference": {
+            "id": "121",
+            "uri": "users/121",
+            "real_name": "Alexandr A. Tsaregorodtsev (alexandr_tsaregorodt)",
+            "username": "alexandr_tsaregorodt"
+          }
+        },
+        {
+          "id": 163,
+          "label": "alma_shalbayeva",
+          "user_reference": {
+            "id": "163",
+            "uri": "users/163",
+            "real_name": "Alma Kh. Shalbayeva (alma_shalbayeva)",
+            "username": "alma_shalbayeva"
+          }
+        },
+        {
+          "id": 160,
+          "label": "anatoly_konstantinov",
+          "user_reference": {
+            "id": "160",
+            "uri": "users/160",
+            "real_name": "Anatoly V. Konstantinov (anatoly_konstantinov)",
+            "username": "anatoly_konstantinov"
+          }
+        },
+        {
+          "id": 162,
+          "label": "andrey_koshev",
+          "user_reference": {
+            "id": "162",
+            "uri": "users/162",
+            "real_name": "Andrey V. Koshev (andrey_koshev)",
+            "username": "andrey_koshev"
+          }
+        },
+        {
+          "id": 132,
+          "label": "demjan_poberegny",
+          "user_reference": {
+            "id": "132",
+            "uri": "users/132",
+            "real_name": "Demjan P. Poberegny (demjan_poberegny)",
+            "username": "demjan_poberegny"
+          }
+        },
+        {
+          "id": 153,
+          "label": "dilmurod_karimberdie",
+          "user_reference": {
+            "id": "153",
+            "uri": "users/153",
+            "real_name": "Dilmurod I. Karimberdiev (dilmurod_karimberdie)",
+            "username": "dilmurod_karimberdie"
+          }
+        },
+        {
+          "id": 133,
+          "label": "eugene_bantsekin",
+          "user_reference": {
+            "id": "133",
+            "uri": "users/133",
+            "real_name": "Eugene A. Bantsekin (eugene_bantsekin)",
+            "username": "eugene_bantsekin"
+          }
+        },
+        {
+          "id": 110,
+          "label": "irina_bulanova",
+          "user_reference": {
+            "id": "110",
+            "uri": "users/110",
+            "real_name": "Irina Bulanova (irina_bulanova)",
+            "username": "irina_bulanova"
+          }
+        },
+        {
+          "id": 106,
+          "label": "konstantin_levin",
+          "user_reference": {
+            "id": "106",
+            "uri": "users/106",
+            "real_name": "Konstantin V. Levin (konstantin_levin)",
+            "username": "konstantin_levin"
+          }
+        },
+        {
+          "id": 126,
+          "label": "michail_zezev",
+          "user_reference": {
+            "id": "126",
+            "uri": "users/126",
+            "real_name": "Michail A. Zezev (michail_zezev)",
+            "username": "michail_zezev"
+          }
+        },
+        {
+          "id": 129,
+          "label": "nataliya_peshkova",
+          "user_reference": {
+            "id": "129",
+            "uri": "users/129",
+            "real_name": "Nataliya S. Peshkova (nataliya_peshkova)",
+            "username": "nataliya_peshkova"
+          }
+        },
+        {
+          "id": 149,
+          "label": "natalya_ancharuk",
+          "user_reference": {
+            "id": "149",
+            "uri": "users/149",
+            "real_name": "Natalya V. Ancharuk (natalya_ancharuk)",
+            "username": "natalya_ancharuk"
+          }
+        },
+        {
+          "id": 154,
+          "label": "oleg_gorlach",
+          "user_reference": {
+            "id": "154",
+            "uri": "users/154",
+            "real_name": "Oleg V. Gorlach (oleg_gorlach)",
+            "username": "oleg_gorlach"
+          }
+        },
+        {
+          "id": 172,
+          "label": "practicant1_obk",
+          "user_reference": {
+            "id": "172",
+            "uri": "users/172",
+            "real_name": "Practicant1.OBK (practicant1_obk)",
+            "username": "practicant1_obk"
+          }
+        },
+        {
+          "id": 165,
+          "label": "sergey_lebedev",
+          "user_reference": {
+            "id": "165",
+            "uri": "users/165",
+            "real_name": "Sergey S. Lebedev (sergey_lebedev)",
+            "username": "sergey_lebedev"
+          }
+        },
+        {
+          "id": 116,
+          "label": "sergey_shpakovskiy",
+          "user_reference": {
+            "id": "116",
+            "uri": "users/116",
+            "real_name": "Sergey V. Shpakovskiy (sergey_shpakovskiy)",
+            "username": "sergey_shpakovskiy"
+          }
+        },
+        {
+          "id": 101,
+          "label": "admin",
+          "user_reference": {
+            "id": "101",
+            "uri": "users/101",
+            "real_name": "Site Administrator (admin)",
+            "username": "admin"
+          }
+        },
+        {
+          "id": 171,
+          "label": "vadim_sidorchuk",
+          "user_reference": {
+            "id": "171",
+            "uri": "users/171",
+            "real_name": "Vadim V. Sidorchuk (vadim_sidorchuk)",
+            "username": "vadim_sidorchuk"
+          }
+        },
+        {
+          "id": 114,
+          "label": "valeriy_suhorukov",
+          "user_reference": {
+            "id": "114",
+            "uri": "users/114",
+            "real_name": "Valeriy A. Suhorukov (valeriy_suhorukov)",
+            "username": "valeriy_suhorukov"
+          }
+        },
+        {
+          "id": 113,
+          "label": "victor_vernigora",
+          "user_reference": {
+            "id": "113",
+            "uri": "users/113",
+            "real_name": "Victor S. Vernigora (victor_vernigora)",
+            "username": "victor_vernigora"
+          }
+        },
+        {
+          "id": 169,
+          "label": "vladimir_kiryakov",
+          "user_reference": {
+            "id": "169",
+            "uri": "users/169",
+            "real_name": "Vladimir S. Kiryakov (vladimir_kiryakov)",
+            "username": "vladimir_kiryakov"
+          }
+        },
+        {
+          "id": 175,
+          "label": "vladislav_melikyan",
+          "user_reference": {
+            "id": "175",
+            "uri": "users/175",
+            "real_name": "Vladislav A. Melikyan (vladislav_melikyan)",
+            "username": "vladislav_melikyan"
+          }
+        },
+        {
+          "id": 115,
+          "label": "vladislav_ladan",
+          "user_reference": {
+            "id": "115",
+            "uri": "users/115",
+            "real_name": "Vladislav I. Ladan (vladislav_ladan)",
+            "username": "vladislav_ladan"
+          }
+        },
+        {
+          "id": 136,
+          "label": "yekaterina_bruner",
+          "user_reference": {
+            "id": "136",
+            "uri": "users/136",
+            "real_name": "Yekaterina P. Bruner (yekaterina_bruner)",
+            "username": "yekaterina_bruner"
+          }
+        },
+        {
+          "id": 150,
+          "label": "yelena_zuyeva",
+          "user_reference": {
+            "id": "150",
+            "uri": "users/150",
+            "real_name": "Yelena B. Zuyeva (yelena_zuyeva)",
+            "username": "yelena_zuyeva"
+          }
+        },
+        {
+          "id": 151,
+          "label": "yelena_kupchenko",
+          "user_reference": {
+            "id": "151",
+            "uri": "users/151",
+            "real_name": "Yelena I. Kupchenko (yelena_kupchenko)",
+            "username": "yelena_kupchenko"
+          }
+        },
+        {
+          "id": 137,
+          "label": "yevgeniy_matveichev",
+          "user_reference": {
+            "id": "137",
+            "uri": "users/137",
+            "real_name": "Yevgeniy A. Matveichev (yevgeniy_matveichev)",
+            "username": "yevgeniy_matveichev"
+          }
+        },
+        {
+          "id": 152,
+          "label": "yuriy_chsheglov",
+          "user_reference": {
+            "id": "152",
+            "uri": "users/152",
+            "real_name": "Yuriy V. Chsheglov (yuriy_chsheglov)",
+            "username": "yuriy_chsheglov"
+          }
+        }
+      ],
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": "users",
+        "list": [
+          {
+            "id": 3,
+            "label": "project_members"
+          }
+        ]
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": []
+    },
+    {
+      "is_time_displayed": false,
+      "field_id": 28744,
+      "label": "Плановая дата установки на боевой",
+      "name": "__1111",
+      "type": "date",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": ""
+    },
+    {
+      "field_id": 22305,
+      "label": "Уведомлять участников обновления",
+      "name": "field_4",
+      "type": "msb",
+      "values": [
+        {
+          "id": 118,
+          "label": "aktoty_bekmaganbetov",
+          "user_reference": {
+            "id": "118",
+            "uri": "users/118",
+            "real_name": "Aktoty B. Bekmaganbetova (aktoty_bekmaganbetov)",
+            "username": "aktoty_bekmaganbetov"
+          }
+        },
+        {
+          "id": 121,
+          "label": "alexandr_tsaregorodt",
+          "user_reference": {
+            "id": "121",
+            "uri": "users/121",
+            "real_name": "Alexandr A. Tsaregorodtsev (alexandr_tsaregorodt)",
+            "username": "alexandr_tsaregorodt"
+          }
+        },
+        {
+          "id": 163,
+          "label": "alma_shalbayeva",
+          "user_reference": {
+            "id": "163",
+            "uri": "users/163",
+            "real_name": "Alma Kh. Shalbayeva (alma_shalbayeva)",
+            "username": "alma_shalbayeva"
+          }
+        },
+        {
+          "id": 160,
+          "label": "anatoly_konstantinov",
+          "user_reference": {
+            "id": "160",
+            "uri": "users/160",
+            "real_name": "Anatoly V. Konstantinov (anatoly_konstantinov)",
+            "username": "anatoly_konstantinov"
+          }
+        },
+        {
+          "id": 162,
+          "label": "andrey_koshev",
+          "user_reference": {
+            "id": "162",
+            "uri": "users/162",
+            "real_name": "Andrey V. Koshev (andrey_koshev)",
+            "username": "andrey_koshev"
+          }
+        },
+        {
+          "id": 132,
+          "label": "demjan_poberegny",
+          "user_reference": {
+            "id": "132",
+            "uri": "users/132",
+            "real_name": "Demjan P. Poberegny (demjan_poberegny)",
+            "username": "demjan_poberegny"
+          }
+        },
+        {
+          "id": 153,
+          "label": "dilmurod_karimberdie",
+          "user_reference": {
+            "id": "153",
+            "uri": "users/153",
+            "real_name": "Dilmurod I. Karimberdiev (dilmurod_karimberdie)",
+            "username": "dilmurod_karimberdie"
+          }
+        },
+        {
+          "id": 133,
+          "label": "eugene_bantsekin",
+          "user_reference": {
+            "id": "133",
+            "uri": "users/133",
+            "real_name": "Eugene A. Bantsekin (eugene_bantsekin)",
+            "username": "eugene_bantsekin"
+          }
+        },
+        {
+          "id": 110,
+          "label": "irina_bulanova",
+          "user_reference": {
+            "id": "110",
+            "uri": "users/110",
+            "real_name": "Irina Bulanova (irina_bulanova)",
+            "username": "irina_bulanova"
+          }
+        },
+        {
+          "id": 106,
+          "label": "konstantin_levin",
+          "user_reference": {
+            "id": "106",
+            "uri": "users/106",
+            "real_name": "Konstantin V. Levin (konstantin_levin)",
+            "username": "konstantin_levin"
+          }
+        },
+        {
+          "id": 126,
+          "label": "michail_zezev",
+          "user_reference": {
+            "id": "126",
+            "uri": "users/126",
+            "real_name": "Michail A. Zezev (michail_zezev)",
+            "username": "michail_zezev"
+          }
+        },
+        {
+          "id": 129,
+          "label": "nataliya_peshkova",
+          "user_reference": {
+            "id": "129",
+            "uri": "users/129",
+            "real_name": "Nataliya S. Peshkova (nataliya_peshkova)",
+            "username": "nataliya_peshkova"
+          }
+        },
+        {
+          "id": 149,
+          "label": "natalya_ancharuk",
+          "user_reference": {
+            "id": "149",
+            "uri": "users/149",
+            "real_name": "Natalya V. Ancharuk (natalya_ancharuk)",
+            "username": "natalya_ancharuk"
+          }
+        },
+        {
+          "id": 154,
+          "label": "oleg_gorlach",
+          "user_reference": {
+            "id": "154",
+            "uri": "users/154",
+            "real_name": "Oleg V. Gorlach (oleg_gorlach)",
+            "username": "oleg_gorlach"
+          }
+        },
+        {
+          "id": 172,
+          "label": "practicant1_obk",
+          "user_reference": {
+            "id": "172",
+            "uri": "users/172",
+            "real_name": "Practicant1.OBK (practicant1_obk)",
+            "username": "practicant1_obk"
+          }
+        },
+        {
+          "id": 165,
+          "label": "sergey_lebedev",
+          "user_reference": {
+            "id": "165",
+            "uri": "users/165",
+            "real_name": "Sergey S. Lebedev (sergey_lebedev)",
+            "username": "sergey_lebedev"
+          }
+        },
+        {
+          "id": 116,
+          "label": "sergey_shpakovskiy",
+          "user_reference": {
+            "id": "116",
+            "uri": "users/116",
+            "real_name": "Sergey V. Shpakovskiy (sergey_shpakovskiy)",
+            "username": "sergey_shpakovskiy"
+          }
+        },
+        {
+          "id": 101,
+          "label": "admin",
+          "user_reference": {
+            "id": "101",
+            "uri": "users/101",
+            "real_name": "Site Administrator (admin)",
+            "username": "admin"
+          }
+        },
+        {
+          "id": 171,
+          "label": "vadim_sidorchuk",
+          "user_reference": {
+            "id": "171",
+            "uri": "users/171",
+            "real_name": "Vadim V. Sidorchuk (vadim_sidorchuk)",
+            "username": "vadim_sidorchuk"
+          }
+        },
+        {
+          "id": 114,
+          "label": "valeriy_suhorukov",
+          "user_reference": {
+            "id": "114",
+            "uri": "users/114",
+            "real_name": "Valeriy A. Suhorukov (valeriy_suhorukov)",
+            "username": "valeriy_suhorukov"
+          }
+        },
+        {
+          "id": 113,
+          "label": "victor_vernigora",
+          "user_reference": {
+            "id": "113",
+            "uri": "users/113",
+            "real_name": "Victor S. Vernigora (victor_vernigora)",
+            "username": "victor_vernigora"
+          }
+        },
+        {
+          "id": 169,
+          "label": "vladimir_kiryakov",
+          "user_reference": {
+            "id": "169",
+            "uri": "users/169",
+            "real_name": "Vladimir S. Kiryakov (vladimir_kiryakov)",
+            "username": "vladimir_kiryakov"
+          }
+        },
+        {
+          "id": 175,
+          "label": "vladislav_melikyan",
+          "user_reference": {
+            "id": "175",
+            "uri": "users/175",
+            "real_name": "Vladislav A. Melikyan (vladislav_melikyan)",
+            "username": "vladislav_melikyan"
+          }
+        },
+        {
+          "id": 115,
+          "label": "vladislav_ladan",
+          "user_reference": {
+            "id": "115",
+            "uri": "users/115",
+            "real_name": "Vladislav I. Ladan (vladislav_ladan)",
+            "username": "vladislav_ladan"
+          }
+        },
+        {
+          "id": 136,
+          "label": "yekaterina_bruner",
+          "user_reference": {
+            "id": "136",
+            "uri": "users/136",
+            "real_name": "Yekaterina P. Bruner (yekaterina_bruner)",
+            "username": "yekaterina_bruner"
+          }
+        },
+        {
+          "id": 150,
+          "label": "yelena_zuyeva",
+          "user_reference": {
+            "id": "150",
+            "uri": "users/150",
+            "real_name": "Yelena B. Zuyeva (yelena_zuyeva)",
+            "username": "yelena_zuyeva"
+          }
+        },
+        {
+          "id": 151,
+          "label": "yelena_kupchenko",
+          "user_reference": {
+            "id": "151",
+            "uri": "users/151",
+            "real_name": "Yelena I. Kupchenko (yelena_kupchenko)",
+            "username": "yelena_kupchenko"
+          }
+        },
+        {
+          "id": 137,
+          "label": "yevgeniy_matveichev",
+          "user_reference": {
+            "id": "137",
+            "uri": "users/137",
+            "real_name": "Yevgeniy A. Matveichev (yevgeniy_matveichev)",
+            "username": "yevgeniy_matveichev"
+          }
+        },
+        {
+          "id": 152,
+          "label": "yuriy_chsheglov",
+          "user_reference": {
+            "id": "152",
+            "uri": "users/152",
+            "real_name": "Yuriy V. Chsheglov (yuriy_chsheglov)",
+            "username": "yuriy_chsheglov"
+          }
+        }
+      ],
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": "users",
+        "list": [
+          {
+            "id": 3,
+            "label": "project_members"
+          }
+        ]
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": []
+    },
+    {
+      "field_id": 22289,
+      "label": "4",
+      "name": "4_1",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22290,
+      "label": "5",
+      "name": "5_1",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22291,
+      "label": "Номер патча",
+      "name": "summary",
+      "type": "string",
+      "values": null,
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": ""
+    },
+    {
+      "field_id": 22292,
+      "label": "Ссылка на патч",
+      "name": "__11",
+      "type": "text",
+      "values": null,
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": {
+        "format": "text",
+        "content": ""
+      }
+    },
+    {
+      "field_id": 22293,
+      "label": "Изменения",
+      "name": "details",
+      "type": "text",
+      "values": null,
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": {
+        "format": "text",
+        "content": ""
+      }
+    },
+    {
+      "field_id": 22294,
+      "label": "4",
+      "name": "4",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22295,
+      "label": "5",
+      "name": "5",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22296,
+      "label": "Зависимый функционал",
+      "name": "_",
+      "type": "text",
+      "values": null,
+      "required": true,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": {
+        "format": "text",
+        "content": ""
+      }
+    },
+    {
+      "field_id": 28743,
+      "label": "7",
+      "name": "7",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 28742,
+      "label": "6",
+      "name": "6",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22299,
+      "label": "Attachments",
+      "name": "attachment",
+      "type": "file",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22300,
+      "label": "Artifact links",
+      "name": "artifact_links",
+      "type": "art_link",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22301,
+      "label": "Cross Reference",
+      "name": "cross_reference",
+      "type": "cross",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22273,
+      "label": "1",
+      "name": "1",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22274,
+      "label": "2",
+      "name": "2",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22276,
+      "label": "3",
+      "name": "3",
+      "type": "column",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22282,
+      "label": "Details",
+      "name": "fieldset_1",
+      "type": "fieldset",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read"
+      ],
+      "default_value": null
+    },
+    {
+      "field_id": 22285,
+      "label": "Описание изменений для Заказчика",
+      "name": "__111",
+      "type": "text",
+      "values": null,
+      "required": false,
+      "collapsed": false,
+      "bindings": {
+        "type": null,
+        "list": []
+      },
+      "permissions": [
+        "read",
+        "update",
+        "create"
+      ],
+      "default_value": {
+        "format": "text",
+        "content": ""
+      }
+    }
+  ],
+  "structure": [
+    {
+      "id": 22273,
+      "content": [
+        {
+          "id": 22286,
+          "content": null
+        }
+      ]
+    },
+    {
+      "id": 22274,
+      "content": [
+        {
+          "id": 22287,
+          "content": null
+        }
+      ]
+    },
+    {
+      "id": 22276,
+      "content": [
+        {
+          "id": 22288,
+          "content": null
+        }
+      ]
+    },
+    {
+      "id": 22282,
+      "content": [
+        {
+          "id": 22289,
+          "content": [
+            {
+              "id": 22306,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 22290,
+          "content": [
+            {
+              "id": 22305,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 22291,
+          "content": null
+        },
+        {
+          "id": 22292,
+          "content": null
+        },
+        {
+          "id": 22293,
+          "content": null
+        },
+        {
+          "id": 22294,
+          "content": [
+            {
+              "id": 22303,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 22295,
+          "content": [
+            {
+              "id": 22304,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 22296,
+          "content": null
+        },
+        {
+          "id": 28743,
+          "content": [
+            {
+              "id": 22297,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 28742,
+          "content": [
+            {
+              "id": 28744,
+              "content": null
+            }
+          ]
+        },
+        {
+          "id": 22299,
+          "content": null
+        },
+        {
+          "id": 22300,
+          "content": null
+        },
+        {
+          "id": 22301,
+          "content": null
+        }
+      ]
+    },
+    {
+      "id": 22285,
+      "content": null
+    }
+  ],
+  "semantics": {
+    "title": {
+      "field_id": 22291
+    },
+    "status": {
+      "field_id": 22297,
+      "value_ids": [
+        16174,
+        16175,
+        16179,
+        16180,
+        16181,
+        16182
+      ]
+    },
+    "contributor": {
+      "field_id": 22306
+    }
+  },
+  "workflow": {
+    "field_id": 0,
+    "is_used": false,
+    "rules": {
+      "dates": [],
+      "lists": []
+    },
+    "transitions": []
+  },
+  "parent": null,
+  "resources": [
+    {
+      "type": "reports",
+      "uri": "trackers/544/tracker_reports"
+    }
+  ],
+  "color_name": "inca_silver"
+}

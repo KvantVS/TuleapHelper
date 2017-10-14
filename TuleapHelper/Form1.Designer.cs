@@ -146,7 +146,7 @@
             this.MenuCreatePatchT2,
             this.MenuCreateBuildT1});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(236, 136);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(236, 114);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
             // 
             // MenuBeginWorkOnBug
@@ -266,6 +266,8 @@
             // chb_deleteTokenOnClose
             // 
             this.chb_deleteTokenOnClose.AutoSize = true;
+            this.chb_deleteTokenOnClose.Checked = true;
+            this.chb_deleteTokenOnClose.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chb_deleteTokenOnClose.Location = new System.Drawing.Point(766, 241);
             this.chb_deleteTokenOnClose.Name = "chb_deleteTokenOnClose";
             this.chb_deleteTokenOnClose.Size = new System.Drawing.Size(238, 17);
@@ -275,12 +277,13 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(643, 177);
+            this.button7.Location = new System.Drawing.Point(691, 289);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
             this.button7.TabIndex = 76;
             this.button7.Text = "button7";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // panel_Libs
@@ -897,6 +900,7 @@
             this.button4.TabIndex = 71;
             this.button4.Text = "CreatePatch";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
@@ -908,6 +912,7 @@
             this.button3.TabIndex = 70;
             this.button3.Text = "Create task for tuleap.net";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Visible = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
@@ -970,7 +975,6 @@
             this.tb_Pass.PasswordChar = '*';
             this.tb_Pass.Size = new System.Drawing.Size(237, 20);
             this.tb_Pass.TabIndex = 64;
-            this.tb_Pass.Text = "1qwer0Nat";
             // 
             // tb_User
             // 
@@ -1000,6 +1004,7 @@
             this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 61;
             this.label3.Text = "ArtifactID";
+            this.label3.Visible = false;
             // 
             // tbArtifact
             // 
@@ -1009,6 +1014,7 @@
             this.tbArtifact.Size = new System.Drawing.Size(68, 20);
             this.tbArtifact.TabIndex = 60;
             this.tbArtifact.Text = "5315";
+            this.tbArtifact.Visible = false;
             // 
             // label2
             // 
@@ -1019,6 +1025,7 @@
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 59;
             this.label2.Text = "TrackerID";
+            this.label2.Visible = false;
             // 
             // label1
             // 
@@ -1029,6 +1036,7 @@
             this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 58;
             this.label1.Text = "ProjectID";
+            this.label1.Visible = false;
             // 
             // textBox4
             // 
@@ -1037,6 +1045,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(68, 20);
             this.textBox4.TabIndex = 57;
+            this.textBox4.Visible = false;
             // 
             // button12
             // 
@@ -1047,6 +1056,7 @@
             this.button12.TabIndex = 56;
             this.button12.Text = "getTracker";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Visible = false;
             this.button12.Click += new System.EventHandler(this.button12_Click_1);
             // 
             // btn_InitializeWork
@@ -1083,6 +1093,7 @@
             // 
             // btn_GetAllBugs
             // 
+            this.btn_GetAllBugs.Enabled = false;
             this.btn_GetAllBugs.Location = new System.Drawing.Point(779, 78);
             this.btn_GetAllBugs.Margin = new System.Windows.Forms.Padding(4);
             this.btn_GetAllBugs.Name = "btn_GetAllBugs";
@@ -1101,6 +1112,7 @@
             this.button11.TabIndex = 51;
             this.button11.Text = "Get artifact";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Visible = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // tbTracker
@@ -1110,6 +1122,7 @@
             this.tbTracker.Name = "tbTracker";
             this.tbTracker.Size = new System.Drawing.Size(68, 20);
             this.tbTracker.TabIndex = 50;
+            this.tbTracker.Visible = false;
             // 
             // listView4
             // 
@@ -1119,6 +1132,7 @@
             this.listView4.Size = new System.Drawing.Size(309, 125);
             this.listView4.TabIndex = 49;
             this.listView4.UseCompatibleStateImageBehavior = false;
+            this.listView4.Visible = false;
             // 
             // listView3
             // 
@@ -1128,6 +1142,7 @@
             this.listView3.Size = new System.Drawing.Size(193, 208);
             this.listView3.TabIndex = 48;
             this.listView3.UseCompatibleStateImageBehavior = false;
+            this.listView3.Visible = false;
             // 
             // listView2
             // 
@@ -1137,6 +1152,7 @@
             this.listView2.Size = new System.Drawing.Size(241, 208);
             this.listView2.TabIndex = 47;
             this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.Visible = false;
             // 
             // listView1
             // 
@@ -1200,7 +1216,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(1251, 223);
+            this.textBox1.Size = new System.Drawing.Size(1251, 222);
             this.textBox1.TabIndex = 10;
             // 
             // menuStrip1

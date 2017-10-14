@@ -51,13 +51,14 @@ namespace TuleapHelper
         public static string sWorkingFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName);
         public static string sZipTempFolder = Path.Combine(sWorkingFolder, "zippatch");
         public string sAttr = "";
-        public string sEsedoProjectFolder = ConfigurationManager.AppSettings.Get(CommonConstants.settingProjectFolder) + @"\ESEDO_Sources";//  @"C:\NAT_ESEDO\src\CopiedManually\git-esedo\ESEDO_Sources";
         public string remotePatchFolder = @"\\buildkrg\GE-ESEDO\Сборка на тестирование\1.1.0";
 
         public bool patchButton = false;
         //public TuleapClasses.Artifact currentBug;
 
         List<string> libsToPatch = new List<string>();
+
+        //todo: перенести короткие имена либ в Настройки
         Dictionary<string, string> libsShortnames = new Dictionary<string, string>
         {
             {"JS.EDO.AccountingIntegration", "AI"},
@@ -172,6 +173,7 @@ namespace TuleapHelper
             if (System.IO.File.Exists(CommonVariables.settingsFile))
             {
                 CommonVariables.projectFolder = Configurator.LoadParam(CommonConstants.settingProjectFolder);
+                CommonVariables.srcFolder = CommonVariables.projectFolder + @"\ESEDO_Sources";
                 CommonVariables.globalUserInfo.user_id = Configurator.LoadParam("user_id");
                 CommonVariables.globalUserInfo.token = Configurator.LoadParam("token");
                 CommonVariables.tuleapHost = Configurator.LoadParam("tuleapHost");
@@ -197,13 +199,13 @@ namespace TuleapHelper
             // --- Загружаем библиотеки для чекбоксов
             try
             {
-                string[] libFolders = Directory.GetDirectories(sEsedoProjectFolder); // todo: sEsedoProjectFolder сохранять в настройки в файле и загружать из него
+                string[] libFolders = Directory.GetDirectories(CommonVariables.srcFolder); 
                 var i = 0;
                 foreach (Control c in panel_Libs.Controls)
                 {
                     if (c is CheckBox)
                     {
-                        (c as CheckBox).Text = libFolders[i].Substring(sEsedoProjectFolder.Length + 1);
+                        (c as CheckBox).Text = libFolders[i].Substring(CommonVariables.srcFolder.Length + 1);
                         i++;
                         if (i >= libFolders.Count())
                             break;
@@ -471,6 +473,12 @@ namespace TuleapHelper
             var d = new Dictionary<string, object>();
             string jsonq = "";
 
+            if (CommonVariables.globalProjects == null)
+            {
+                Log("Ни один проект не загружен. Загрузите проекты.");
+                return;
+            }
+
             // --- Вытаскиваем баги. ID проектов нам заранее известны. У каждого свой трекер багов
             foreach (var p in CommonVariables.globalProjects)
                 foreach (var t in p.trackers)
@@ -587,9 +595,13 @@ namespace TuleapHelper
             HttpStatusCode respCode;
             respCode = TuleapLevel.Authorize(CommonVariables.tuleapHost, tb_User.Text, tb_Pass.Text);
             if (respCode == HttpStatusCode.OK || respCode == HttpStatusCode.Created)
+            {
                 Log($"Ответ: {respCode}. Авторизован пользователь {tb_User.Text}. user_id: {CommonVariables.globalUserInfo.user_id}, token: {CommonVariables.globalUserInfo.token}");
+                //btn_InitializeWork.Enabled = true;
+            }
             else
                 Log($"Ответ: {respCode}");
+            
         }
 
         /// <summary>
@@ -658,7 +670,7 @@ namespace TuleapHelper
         
 
         /// <summary>
-        /// Создаем артефакт в тулипе (надо потом разделить на отдельные функции: создание патча, создание таска)
+        /// (Не используется. Удалить. Перенесено в TuleapLevel) Создаем артефакт в тулипе (надо потом разделить на отдельные функции: создание патча, создание таска)
         /// </summary>
         /// <param name="trackerId">Id трэкера, в котором создаем артефакт. Определяет вид артефакта: таск, баг, патч.</param>
         /// <param name="bugLinkId">Свзяь с багом. Id бага, с которым следует связать создаваемый артефакт.</param>
@@ -838,6 +850,7 @@ namespace TuleapHelper
         private void btn_InitializeWork_Click(object sender, EventArgs e)
         {
             InitiateWorkWithTuleap();
+            btn_GetAllBugs.Enabled = true;
         }
 
         private void button12_Click_1(object sender, EventArgs e)
@@ -874,8 +887,8 @@ namespace TuleapHelper
         {
             tb_Host.Text = @"https://tuleap.net";
             CommonVariables.tuleapHost = tb_Host.Text + "/api/";
-            tb_User.Text = @"KvantVS";
-            tb_Pass.Text = @"andr0medaT";
+            tb_User.Text = @"";
+            tb_Pass.Text = @"";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -916,7 +929,7 @@ namespace TuleapHelper
             tb_Host.Text = @"https://tuleap.nat.kz";
             CommonVariables.tuleapHost = tb_Host.Text + "/api/";
             tb_User.Text = @"Vadim.Sidorchuk";
-            tb_Pass.Text = @"1qwer0Nat";
+            tb_Pass.Text = @"";
         }
 
         private void Form1_Resize(object sender, EventArgs e)

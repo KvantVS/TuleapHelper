@@ -256,10 +256,14 @@ namespace TuleapHelper
             if (b)
             {
                 mess = "";
-                /////////////////////////////var s = TuleapLevel.CreatePatchInTuleap(out mess, false, libsToPatch, naznachenoList, notificateList, TrackerId, null, tbFilename.Text, "", tbVersion.Text, patchFilename, Art);
+                // (закоментировано, чтобы не портить ESEDO-проекты в тулипе (если есть возможность удалить артефакт - можно тестить)
+                // var s = TuleapLevel.CreatePatchInTuleap(out mess, false, libsToPatch, naznachenoList, notificateList, TrackerId, null, tbFilename.Text, "", tbVersion.Text, patchFilename, Art);
             }
 
-            //todo обновлять баг тоже
+            //todo обновлять сам баг тоже
+
+            // --- Обновляем баг (добавляем ссылку на тулиповский патч, (ставим статус на тестировании, если надо))
+
             //Dictionary<string, object> fieldValues = new Dictionary<string, object>();
             //var LinkFieldId = Art.tracker.fields.Where(f => f.label == "Artifact links" || f.name == "artifact_links" || f.type == "art_link").FirstOrDefault().field_id;
             //fieldValues.Add(new Dictionary<string, object>
@@ -268,6 +272,7 @@ namespace TuleapHelper
             //    //{ "bind_value_ids", new string[] {n} }
             //    { "bind_value_ids", list_assignedTo.ToArray() }
             //});
+
             //TuleapLevel.UpdateArtifact(Art, null);
 
         }
