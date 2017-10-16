@@ -10,17 +10,17 @@ namespace TuleapHelper
     public class TuleapClasses
     {
 
-        public class Track
-        {
-            public int trackerId { get; set; }
-            public struct Fild
-            {
-                int FieldId;
-                string valueparamName;
-                object valueByDefault;
-            }
-            public List<Fild> RequiredFields { get; set; }
-        }
+        //public class Track
+        //{
+        //    public int trackerId { get; set; }
+        //    public struct Fild
+        //    {
+        //        int FieldId;
+        //        string valueparamName;
+        //        object valueByDefault;
+        //    }
+        //    public List<Fild> RequiredFields { get; set; }
+        //}
 
         public class UserInfo
         {
@@ -49,11 +49,11 @@ namespace TuleapHelper
         }
 
 
-        public class Tracker
-        {
-            public int id { get; set; }
-            public string uri { get; set; }
-        }
+        //public class Tracker
+        //{
+        //    public int id { get; set; }
+        //    public string uri { get; set; }
+        //}
 
         //public class Artifact
         //{

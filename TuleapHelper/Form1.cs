@@ -21,7 +21,7 @@ using System.Configuration;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices.ComTypes;
 using System.Web.UI.WebControls;
-using static TuleapHelper.RequestSender;
+//using static TuleapHelper.RequestSender;
 using CheckBox = System.Windows.Forms.CheckBox;
 using System.Reflection;
 
